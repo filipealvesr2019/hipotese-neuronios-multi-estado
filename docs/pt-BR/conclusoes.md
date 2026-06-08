@@ -1,5 +1,37 @@
 # Conclusões Atuais
 
-✅ Estados aprendem representações diferentes.
-✅ Gate influencia fortemente o resultado.
-✅ Sparse Routing reduz FLOPs.
+*Somente fatos que sobreviveram a múltiplos experimentos e validação com 30 seeds.*
+
+---
+
+✅ **Estados aprendem representações diferentes.**
+Correlação entre estados ≈ 0.01. Eles não se tornam cópias uns dos outros. Confirmado no Teste 12.
+
+✅ **O Gate consegue especializar o roteamento.**
+Na Layer 1, o gate distribui o tráfego de forma saudável entre os especialistas. Confirmado na V2, V3 e V4.
+
+✅ **Skip Connections resolvem o colapso de treinamento.**
+Sem skip connections (V2), a performance caiu para 62.1%. Com elas (V3+), retornou a ~85%. Confirmado experimentalmente.
+
+✅ **Sparse Routing (Top-1) elimina o vazamento de ruído.**
+No V3, remover um estado *melhorava* a performance (+2.75pp), indicando vazamento de ruído. No V4, o mesmo estado tem impacto de 0.00pp — foi perfeitamente silenciado pelo roteamento esparso.
+
+✅ **A arquitetura V4 empata com o MLP Tradicional em múltiplos domínios.**
+Validado com 30 seeds em Círculos, Moons, Spirals e dataset de 20 features.
+
+✅ **V4 consome ~50% dos FLOPs na inferência.**
+MLP Tradicional: ~4.350 operações. V4 Sparse: ~2.080 operações. O roteamento Top-1 ativa apenas 1 especialista por camada, evitando cálculos desnecessários.
+
+---
+
+⚠️ **Não há evidência de ganho absoluto de acurácia.**
+A arquitetura iguala, mas não supera consistentemente o MLP nos datasets testados.
+
+⚠️ **Mode Collapse nas camadas mais profundas é persistente.**
+A Layer 2 tende a concentrar 80-100% do tráfego em um único especialista, independente de Softmax (V3) ou Top-1 (V4).
+
+⚠️ **Load Balancing Loss não resolveu o colapso em redes rasas.**
+A penalidade auxiliar (V4.1) não melhorou a accuracy nem diversificou o uso dos especialistas de forma sustentada.
+
+⚠️ **Sem evidência de escalabilidade para LLMs.**
+Todos os testes foram em redes rasas (2 camadas) e datasets pequenos. A hipótese de que a arquitetura funciona em Transformers ainda é um experimento futuro.
