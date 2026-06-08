@@ -179,3 +179,30 @@ That would suggest specialization is replacing part of the active width of the d
 **Conclusion:** V4 96/gate 8 used fewer FLOPs than MLP 128 and stayed relatively close in accuracy (-0.21pp), but did not reach the target. V4 112 got worse, suggesting the curve is not monotonic with hidden size and the current problem is likely optimization/routing, not just width.
 
 **Next direction:** test more epochs, lower learning rate, gate temperature, and per-epoch entropy/expert usage for the best economic configurations.
+
+---
+
+### Experiment 10: MNIST Economic V4 Gate 6 + Entropy Logging
+**Hypothesis:** Gate 6 may be a sweet spot between gate 4 and gate 8, preserving accuracy with fewer FLOPs.
+**Result:** Not confirmed.
+
+**Setup:**
+- Dataset: full MNIST
+- Seed: 1
+- Epochs: 5
+- V4: 2 states, no skip
+- Hidden: 64, 96, 112, 128
+- Gate: 6
+
+**Results:**
+
+| Model | Hidden | Gate | Accuracy | FLOPs/sample | Acc/MFLOP | L1 H | L2 H |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| V4 | 64 | 6 | 92.55% | 120,048 | 7.7094 | 0.993 | 0.234 |
+| V4 | 96 | 6 | 93.15% | 181,488 | 5.1326 | 0.945 | 0.029 |
+| V4 | 112 | 6 | 93.07% | 213,744 | 4.3543 | 0.999 | 0.110 |
+| V4 | 128 | 6 | 93.02% | 247,024 | 3.7656 | 0.901 | 0.736 |
+
+**Conclusion:** Gate 6 did not beat gate 8. Entropy logging confirmed the structural pattern again: Layer 1 tends to use experts in a distributed way, while Layer 2 frequently collapses. The partial exception was `hidden=128/gate=6`, with a more distributed Layer 2, but without an accuracy gain.
+
+**Next direction:** rerun the best configurations with the new logging (`h96/g8` and `h128/g8`), test more epochs, and tune learning rate/temperature.

@@ -33,6 +33,19 @@ mesma accuracy
 menos FLOPs
 ```
 
+**Grade econômica atual:**
+
+```text
+hidden = 64, 96, 112, 128
+states = 2
+gate = 4, 6, 8
+skip = off
+seeds = 1-3
+epochs = 5 inicialmente
+```
+
+Cada execução V4 deve registrar accuracy, FLOPs, parâmetros, tempo e entropia/uso dos especialistas por época.
+
 ## E3 — Especialização Real
 
 **Pergunta:** Os especialistas realmente aprendem coisas diferentes?
@@ -74,6 +87,8 @@ entropia layer1
 entropia layer2
 distribuição de tráfego por especialista
 ```
+
+**Status:** logging implementado no experimento MNIST para V4. Cada linha de histórico agora inclui distribuição e entropia normalizada das duas camadas.
 
 ## E7 — Robustez
 

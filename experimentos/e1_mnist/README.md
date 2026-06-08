@@ -54,3 +54,32 @@ resultados_finais/e1_mnist_matrix/runs.csv
 resultados_finais/e1_mnist_matrix/summary.csv
 resultados_finais/e1_mnist_matrix/summary.json
 ```
+
+## V4 Econômica
+
+Rodada econômica principal:
+
+```bash
+python experimentos/e1_mnist/codigo/run_mnist_economic_matrix.py --seeds 1 --epochs 5 --dense-hidden 64,128 --v4-hidden 64,96,112,128 --states 2 --gate-hidden 4,6,8 --skip false
+```
+
+Rodada estatística planejada:
+
+```bash
+python experimentos/e1_mnist/codigo/run_mnist_economic_matrix.py --seeds 1-3 --epochs 5 --dense-hidden 64,128 --v4-hidden 64,96,112,128 --states 2 --gate-hidden 4,6,8 --skip false
+```
+
+O JSON de cada V4 agora registra por época:
+
+```text
+gate_stats.layer1.distribution
+gate_stats.layer1.normalized_entropy
+gate_stats.layer2.distribution
+gate_stats.layer2.normalized_entropy
+```
+
+Recriar os CSVs consolidados a partir dos JSONs existentes:
+
+```bash
+python experimentos/e1_mnist/codigo/consolidate_mnist_economic.py
+```

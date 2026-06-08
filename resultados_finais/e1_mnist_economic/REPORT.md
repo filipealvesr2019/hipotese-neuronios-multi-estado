@@ -27,6 +27,7 @@ Variações: hidden 64/128, estados 2/4, gate 8/16, skip on/off
 | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: |
 | V4 | 128 | 2 | 8 | não | 93.92% | 250.688 | 242.622 | 3.7465 |
 | V4 | 96 | 2 | 8 | não | 93.59% | 185.024 | 177.406 | 5.0583 |
+| V4 | 96 | 2 | 6 | não | 93.15% | 181.488 | 175.634 | 5.1326 |
 | V4 | 64 | 2 | 8 | não | 93.31% | 123.456 | 116.286 | 7.5582 |
 | V4 | 64 | 2 | 8 | sim | 93.49% | 232.000 | 170.686 | 4.0297 |
 | V4 | 64 | 4 | 8 | não | 93.22% | 123.520 | 225.122 | 7.5470 |
@@ -65,6 +66,7 @@ Aqui a V4 ficou -0.40pp abaixo e ~12.4% acima em FLOPs. Portanto, ainda não ven
 2. Dois estados foram melhores que quatro estados nesta matriz.
 3. Gate 8 foi melhor que gate 16 em custo-benefício.
 4. A V4 econômica ficou competitiva contra MLP 128, mas ainda não superou MLP 64 em eficiência.
+5. Gate 6 foi testado como ponto intermediário, mas não superou gate 8.
 
 ## Próximo Experimento
 
@@ -103,3 +105,25 @@ learning rate menor
 temperatura do gate
 entropia/uso dos especialistas por época
 ```
+
+## Entropia dos Especialistas
+
+O logging de entropia foi adicionado após os primeiros runs, então apenas os runs novos possuem valores preenchidos no CSV consolidado.
+
+Nos runs com gate 6, o padrão recorrente apareceu novamente:
+
+```text
+Layer 1: entropia alta
+Layer 2: frequentemente colapsada
+```
+
+Exemplos:
+
+| Configuração | L1 H normalizada | L2 H normalizada |
+| --- | ---: | ---: |
+| V4 h64/s2/g6/no-skip | 0.993 | 0.234 |
+| V4 h96/s2/g6/no-skip | 0.945 | 0.029 |
+| V4 h112/s2/g6/no-skip | 0.999 | 0.110 |
+| V4 h128/s2/g6/no-skip | 0.901 | 0.736 |
+
+Isso reforça que o colapso da Layer 2 não desapareceu com a V4 econômica; ele apenas varia conforme a configuração.

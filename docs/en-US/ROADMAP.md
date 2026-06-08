@@ -33,6 +33,19 @@ same accuracy
 fewer FLOPs
 ```
 
+**Current economic grid:**
+
+```text
+hidden = 64, 96, 112, 128
+states = 2
+gate = 4, 6, 8
+skip = off
+seeds = 1-3
+epochs = 5 initially
+```
+
+Each V4 run should record accuracy, FLOPs, parameters, time, and per-epoch expert entropy/usage.
+
 ## E3 — Real Specialization
 
 **Question:** Do the experts actually learn different things?
@@ -74,6 +87,8 @@ layer1 entropy
 layer2 entropy
 traffic distribution per expert
 ```
+
+**Status:** logging has been implemented in the MNIST experiment for V4. Each history row now includes distribution and normalized entropy for both layers.
 
 ## E7 — Robustness
 

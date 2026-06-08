@@ -216,3 +216,30 @@ Isso indicaria que a especialização está substituindo parte da largura ativa 
 **Conclusão:** A V4 96/gate 8 ficou abaixo do MLP 128 em FLOPs e relativamente próxima em accuracy (-0.21pp), mas ainda não cruzou o alvo. A V4 112 piorou, indicando que a curva não é monotônica com hidden e que o problema agora provavelmente envolve otimização/roteamento, não apenas largura.
 
 **Próxima direção:** testar mais épocas, learning rate menor, temperatura do gate e registrar entropia/uso dos especialistas por época nas melhores configurações econômicas.
+
+---
+
+### Experimento 14 — MNIST V4 Econômica Gate 6 + Logging de Entropia
+**Hipótese:** Gate 6 pode ser um sweet spot entre gate 4 e gate 8, preservando accuracy com menos FLOPs.
+**Resultado:** Não confirmado.
+
+**Configuração:**
+- Dataset: MNIST completo
+- Seed: 1
+- Épocas: 5
+- V4: 2 estados, sem skip
+- Hidden: 64, 96, 112, 128
+- Gate: 6
+
+**Resultados:**
+
+| Modelo | Hidden | Gate | Accuracy | FLOPs/amostra | Acc/MFLOP | L1 H | L2 H |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| V4 | 64 | 6 | 92.55% | 120.048 | 7.7094 | 0.993 | 0.234 |
+| V4 | 96 | 6 | 93.15% | 181.488 | 5.1326 | 0.945 | 0.029 |
+| V4 | 112 | 6 | 93.07% | 213.744 | 4.3543 | 0.999 | 0.110 |
+| V4 | 128 | 6 | 93.02% | 247.024 | 3.7656 | 0.901 | 0.736 |
+
+**Conclusão:** Gate 6 não superou gate 8. O logging de entropia confirmou novamente o padrão estrutural: Layer 1 tende a usar os especialistas de forma distribuída, enquanto Layer 2 frequentemente colapsa. A exceção parcial foi `hidden=128/gate=6`, com L2 mais distribuída, mas sem ganho de accuracy.
+
+**Próxima direção:** repetir as melhores configurações com logging novo (`h96/g8` e `h128/g8`), testar mais épocas e ajustar learning rate/temperatura.

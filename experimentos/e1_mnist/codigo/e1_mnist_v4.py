@@ -342,6 +342,39 @@ class SparseV4MLP:
                     usage_l2[cls] += np.bincount(i2[mask], minlength=self.l2.n_states)
         return usage_l1, usage_l2
 
+    def gate_stats(self, x: np.ndarray, batch_size: int = 512):
+        counts_l1 = np.zeros(self.l1.n_states, dtype=np.int64)
+        counts_l2 = np.zeros(self.l2.n_states, dtype=np.int64)
+        total = 0
+        for start in range(0, len(x), batch_size):
+            xb = x[start:start + batch_size]
+            p1 = self.l1.gate_probs(xb)
+            i1 = np.argmax(p1, axis=1)
+            h1 = np.maximum(self.l1.forward_sparse(xb), 0)
+            p2 = self.l2.gate_probs(h1)
+            i2 = np.argmax(p2, axis=1)
+            counts_l1 += np.bincount(i1, minlength=self.l1.n_states)
+            counts_l2 += np.bincount(i2, minlength=self.l2.n_states)
+            total += len(xb)
+
+        def stats(counts: np.ndarray) -> dict:
+            dist = counts.astype(np.float64) / max(int(counts.sum()), 1)
+            nz = dist[dist > 0]
+            entropy = float(-np.sum(nz * np.log2(nz))) if len(nz) else 0.0
+            max_entropy = np.log2(len(dist)) if len(dist) > 1 else 1.0
+            return {
+                "counts": counts.tolist(),
+                "distribution": dist.tolist(),
+                "entropy": entropy,
+                "normalized_entropy": float(entropy / max_entropy) if max_entropy > 0 else 0.0,
+            }
+
+        return {
+            "samples": total,
+            "layer1": stats(counts_l1),
+            "layer2": stats(counts_l2),
+        }
+
     def params(self) -> int:
         return self.l1.params() + self.l2.params() + self.l3.params()
 
@@ -373,8 +406,18 @@ def train(model, x_train, y_train, x_test, y_test, epochs, batch_size, lr, l2, s
             losses.append(loss)
         pred = model.predict(x_test, batch_size) if sparse_predict else model.predict(x_test, batch_size)
         acc = float(np.mean(pred == y_test))
-        history.append({"epoch": epoch, "loss": float(np.mean(losses)), "test_acc": acc})
-        print(f"    epoch {epoch:02d}: loss={np.mean(losses):.4f} test_acc={acc*100:.2f}%")
+        row = {"epoch": epoch, "loss": float(np.mean(losses)), "test_acc": acc}
+        if sparse_predict and hasattr(model, "gate_stats"):
+            row["gate_stats"] = model.gate_stats(x_test, batch_size)
+        history.append(row)
+        msg = f"    epoch {epoch:02d}: loss={np.mean(losses):.4f} test_acc={acc*100:.2f}%"
+        if "gate_stats" in row:
+            gs = row["gate_stats"]
+            msg += (
+                f" L1_H={gs['layer1']['normalized_entropy']:.3f}"
+                f" L2_H={gs['layer2']['normalized_entropy']:.3f}"
+            )
+        print(msg)
     return history, time.perf_counter() - t0
 
 

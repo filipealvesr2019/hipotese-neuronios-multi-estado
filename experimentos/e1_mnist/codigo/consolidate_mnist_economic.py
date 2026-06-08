@@ -38,6 +38,17 @@ def load_result(path: Path) -> dict | None:
 
     history = row["history"]
     final_loss = history[-1]["loss"] if history else None
+    final_gate_stats = history[-1].get("gate_stats") if history else None
+    if final_gate_stats:
+        final_l1_entropy = final_gate_stats["layer1"]["normalized_entropy"]
+        final_l2_entropy = final_gate_stats["layer2"]["normalized_entropy"]
+        final_l1_distribution = final_gate_stats["layer1"]["distribution"]
+        final_l2_distribution = final_gate_stats["layer2"]["distribution"]
+    else:
+        final_l1_entropy = None
+        final_l2_entropy = None
+        final_l1_distribution = None
+        final_l2_distribution = None
     return {
         "model": model,
         "seed": data["seed"],
@@ -52,6 +63,10 @@ def load_result(path: Path) -> dict | None:
         "flops_per_sample": flops,
         "params": row["params"],
         "accuracy_per_mflop": row["accuracy"] / (flops / 1_000_000),
+        "final_l1_entropy": final_l1_entropy,
+        "final_l2_entropy": final_l2_entropy,
+        "final_l1_distribution": json.dumps(final_l1_distribution) if final_l1_distribution is not None else "",
+        "final_l2_distribution": json.dumps(final_l2_distribution) if final_l2_distribution is not None else "",
         "result_file": str(path.relative_to(ROOT)),
     }
 
@@ -79,8 +94,17 @@ def summarize(rows: list[dict]) -> list[dict]:
             "flops_per_sample": items[0]["flops_per_sample"],
             "params": items[0]["params"],
             "accuracy_per_mflop_mean": sum(i["accuracy_per_mflop"] for i in items) / n,
+            "final_l1_entropy_mean": mean_optional([i["final_l1_entropy"] for i in items]),
+            "final_l2_entropy_mean": mean_optional([i["final_l2_entropy"] for i in items]),
         })
     return summary
+
+
+def mean_optional(values: list[float | None]) -> float | None:
+    present = [v for v in values if v is not None]
+    if not present:
+        return None
+    return sum(present) / len(present)
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:

@@ -14,6 +14,10 @@
       "flops_per_sample": 236032,
       "params": 118282,
       "accuracy_per_mflop": 3.9740374186550973,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\dense_h128_seed1.json"
     },
     {
@@ -30,6 +34,10 @@
       "flops_per_sample": 109824,
       "params": 55050,
       "accuracy_per_mflop": 8.532743298368299,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\dense_h64_seed1.json"
     },
     {
@@ -46,7 +54,31 @@
       "flops_per_sample": 210144,
       "params": 205894,
       "accuracy_per_mflop": 4.42363331810568,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h112_s2_g4_noskip_seed1.json"
+    },
+    {
+      "model": "v4_economic",
+      "seed": 1,
+      "hidden": 112,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "accuracy": 0.9307,
+      "final_loss": 0.22750291851433085,
+      "train_time_sec": 38.55672659998527,
+      "inference_time_sec": 0.2296906000119634,
+      "flops_per_sample": 213744,
+      "params": 207698,
+      "accuracy_per_mflop": 4.354274272026349,
+      "final_l1_entropy": 0.9990440322208294,
+      "final_l2_entropy": 0.10993799351977508,
+      "final_l1_distribution": "[0.5182, 0.4818]",
+      "final_l2_distribution": "[0.0146, 0.9854]",
+      "result_file": "resultados_finais\\e1_mnist_economic\\v4_h112_s2_g6_noskip_seed1.json"
     },
     {
       "model": "v4_economic",
@@ -62,6 +94,10 @@
       "flops_per_sample": 217344,
       "params": 209502,
       "accuracy_per_mflop": 4.282611896348645,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h112_s2_g8_noskip_seed1.json"
     },
     {
@@ -78,6 +114,10 @@
       "flops_per_sample": 265344,
       "params": 249966,
       "accuracy_per_mflop": 3.509406657018813,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s2_g16_noskip_seed1.json"
     },
     {
@@ -94,7 +134,31 @@
       "flops_per_sample": 498816,
       "params": 366958,
       "accuracy_per_mflop": 1.88185623556582,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s2_g16_skip_seed1.json"
+    },
+    {
+      "model": "v4_economic",
+      "seed": 1,
+      "hidden": 128,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "accuracy": 0.9302,
+      "final_loss": 0.23466286640368406,
+      "train_time_sec": 41.319062200025655,
+      "inference_time_sec": 0.2572757000452839,
+      "flops_per_sample": 247024,
+      "params": 240786,
+      "accuracy_per_mflop": 3.7656260120474125,
+      "final_l1_entropy": 0.9010891843657631,
+      "final_l2_entropy": 0.7364834525537625,
+      "final_l1_distribution": "[0.683, 0.317]",
+      "final_l2_distribution": "[0.7926, 0.2074]",
+      "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s2_g6_noskip_seed1.json"
     },
     {
       "model": "v4_economic",
@@ -110,6 +174,10 @@
       "flops_per_sample": 250688,
       "params": 242622,
       "accuracy_per_mflop": 3.7464896604544293,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s2_g8_noskip_seed1.json"
     },
     {
@@ -126,6 +194,10 @@
       "flops_per_sample": 484160,
       "params": 359614,
       "accuracy_per_mflop": 1.9369629874421679,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s2_g8_skip_seed1.json"
     },
     {
@@ -142,6 +214,10 @@
       "flops_per_sample": 265472,
       "params": 484018,
       "accuracy_per_mflop": 3.4964139344262297,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s4_g16_noskip_seed1.json"
     },
     {
@@ -158,6 +234,10 @@
       "flops_per_sample": 498944,
       "params": 601010,
       "accuracy_per_mflop": 1.871352296049256,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s4_g16_skip_seed1.json"
     },
     {
@@ -174,6 +254,10 @@
       "flops_per_sample": 250752,
       "params": 476642,
       "accuracy_per_mflop": 3.705254594180705,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s4_g8_noskip_seed1.json"
     },
     {
@@ -190,6 +274,10 @@
       "flops_per_sample": 484224,
       "params": 593634,
       "accuracy_per_mflop": 1.9205987311657415,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h128_s4_g8_skip_seed1.json"
     },
     {
@@ -206,6 +294,10 @@
       "flops_per_sample": 137088,
       "params": 123118,
       "accuracy_per_mflop": 6.75843253968254,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s2_g16_noskip_seed1.json"
     },
     {
@@ -222,7 +314,31 @@
       "flops_per_sample": 245632,
       "params": 177518,
       "accuracy_per_mflop": 3.808542860865034,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s2_g16_skip_seed1.json"
+    },
+    {
+      "model": "v4_economic",
+      "seed": 1,
+      "hidden": 64,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "accuracy": 0.9255,
+      "final_loss": 0.23941677557538127,
+      "train_time_sec": 30.589512799982913,
+      "inference_time_sec": 0.1674982999684289,
+      "flops_per_sample": 120048,
+      "params": 114578,
+      "accuracy_per_mflop": 7.709416233506597,
+      "final_l1_entropy": 0.993286125071764,
+      "final_l2_entropy": 0.23397749769823148,
+      "final_l1_distribution": "[0.5482, 0.4518]",
+      "final_l2_distribution": "[0.0382, 0.9618]",
+      "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s2_g6_noskip_seed1.json"
     },
     {
       "model": "v4_economic",
@@ -238,6 +354,10 @@
       "flops_per_sample": 123456,
       "params": 116286,
       "accuracy_per_mflop": 7.558158372213582,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s2_g8_noskip_seed1.json"
     },
     {
@@ -254,6 +374,10 @@
       "flops_per_sample": 232000,
       "params": 170686,
       "accuracy_per_mflop": 4.0297413793103445,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s2_g8_skip_seed1.json"
     },
     {
@@ -270,6 +394,10 @@
       "flops_per_sample": 137216,
       "params": 231986,
       "accuracy_per_mflop": 6.70840135261194,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s4_g16_noskip_seed1.json"
     },
     {
@@ -286,6 +414,10 @@
       "flops_per_sample": 245760,
       "params": 286386,
       "accuracy_per_mflop": 3.7727864583333335,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s4_g16_skip_seed1.json"
     },
     {
@@ -302,6 +434,10 @@
       "flops_per_sample": 123520,
       "params": 225122,
       "accuracy_per_mflop": 7.546955958549223,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s4_g8_noskip_seed1.json"
     },
     {
@@ -318,6 +454,10 @@
       "flops_per_sample": 232064,
       "params": 279522,
       "accuracy_per_mflop": 4.008376999448428,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h64_s4_g8_skip_seed1.json"
     },
     {
@@ -334,7 +474,31 @@
       "flops_per_sample": 177952,
       "params": 173862,
       "accuracy_per_mflop": 5.230062039201583,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h96_s2_g4_noskip_seed1.json"
+    },
+    {
+      "model": "v4_economic",
+      "seed": 1,
+      "hidden": 96,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "accuracy": 0.9315,
+      "final_loss": 0.22841126183268184,
+      "train_time_sec": 34.62792790000094,
+      "inference_time_sec": 0.20686999999452382,
+      "flops_per_sample": 181488,
+      "params": 175634,
+      "accuracy_per_mflop": 5.132570748479238,
+      "final_l1_entropy": 0.9452263718000546,
+      "final_l2_entropy": 0.02946405184492225,
+      "final_l1_distribution": "[0.6369, 0.3631]",
+      "final_l2_distribution": "[0.003, 0.997]",
+      "result_file": "resultados_finais\\e1_mnist_economic\\v4_h96_s2_g6_noskip_seed1.json"
     },
     {
       "model": "v4_economic",
@@ -350,6 +514,10 @@
       "flops_per_sample": 185024,
       "params": 177406,
       "accuracy_per_mflop": 5.058262711864407,
+      "final_l1_entropy": null,
+      "final_l2_entropy": null,
+      "final_l1_distribution": "",
+      "final_l2_distribution": "",
       "result_file": "resultados_finais\\e1_mnist_economic\\v4_h96_s2_g8_noskip_seed1.json"
     }
   ],
@@ -367,7 +535,9 @@
       "inference_time_mean_sec": 0.08511530002579093,
       "flops_per_sample": 109824,
       "params": 55050,
-      "accuracy_per_mflop_mean": 8.532743298368299
+      "accuracy_per_mflop_mean": 8.532743298368299,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "dense",
@@ -382,7 +552,26 @@
       "inference_time_mean_sec": 0.08450590004213154,
       "flops_per_sample": 236032,
       "params": 118282,
-      "accuracy_per_mflop_mean": 3.9740374186550973
+      "accuracy_per_mflop_mean": 3.9740374186550973,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
+    },
+    {
+      "model": "v4_economic",
+      "hidden": 64,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "seeds": 1,
+      "accuracy_mean": 0.9255,
+      "final_loss_mean": 0.23941677557538127,
+      "train_time_mean_sec": 30.589512799982913,
+      "inference_time_mean_sec": 0.1674982999684289,
+      "flops_per_sample": 120048,
+      "params": 114578,
+      "accuracy_per_mflop_mean": 7.709416233506597,
+      "final_l1_entropy_mean": 0.993286125071764,
+      "final_l2_entropy_mean": 0.23397749769823148
     },
     {
       "model": "v4_economic",
@@ -397,7 +586,9 @@
       "inference_time_mean_sec": 0.15831600001547486,
       "flops_per_sample": 123456,
       "params": 116286,
-      "accuracy_per_mflop_mean": 7.558158372213582
+      "accuracy_per_mflop_mean": 7.558158372213582,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -412,7 +603,9 @@
       "inference_time_mean_sec": 0.24279899999964982,
       "flops_per_sample": 232000,
       "params": 170686,
-      "accuracy_per_mflop_mean": 4.0297413793103445
+      "accuracy_per_mflop_mean": 4.0297413793103445,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -427,7 +620,9 @@
       "inference_time_mean_sec": 0.17180429998552427,
       "flops_per_sample": 137088,
       "params": 123118,
-      "accuracy_per_mflop_mean": 6.75843253968254
+      "accuracy_per_mflop_mean": 6.75843253968254,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -442,7 +637,9 @@
       "inference_time_mean_sec": 0.2703227000311017,
       "flops_per_sample": 245632,
       "params": 177518,
-      "accuracy_per_mflop_mean": 3.808542860865034
+      "accuracy_per_mflop_mean": 3.808542860865034,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -457,7 +654,9 @@
       "inference_time_mean_sec": 0.17823600000701845,
       "flops_per_sample": 123520,
       "params": 225122,
-      "accuracy_per_mflop_mean": 7.546955958549223
+      "accuracy_per_mflop_mean": 7.546955958549223,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -472,7 +671,9 @@
       "inference_time_mean_sec": 0.2771315000136383,
       "flops_per_sample": 232064,
       "params": 279522,
-      "accuracy_per_mflop_mean": 4.008376999448428
+      "accuracy_per_mflop_mean": 4.008376999448428,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -487,7 +688,9 @@
       "inference_time_mean_sec": 0.204628000035882,
       "flops_per_sample": 137216,
       "params": 231986,
-      "accuracy_per_mflop_mean": 6.70840135261194
+      "accuracy_per_mflop_mean": 6.70840135261194,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -502,7 +705,9 @@
       "inference_time_mean_sec": 0.285473300027661,
       "flops_per_sample": 245760,
       "params": 286386,
-      "accuracy_per_mflop_mean": 3.7727864583333335
+      "accuracy_per_mflop_mean": 3.7727864583333335,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -517,7 +722,26 @@
       "inference_time_mean_sec": 0.2176088000414893,
       "flops_per_sample": 177952,
       "params": 173862,
-      "accuracy_per_mflop_mean": 5.230062039201583
+      "accuracy_per_mflop_mean": 5.230062039201583,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
+    },
+    {
+      "model": "v4_economic",
+      "hidden": 96,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "seeds": 1,
+      "accuracy_mean": 0.9315,
+      "final_loss_mean": 0.22841126183268184,
+      "train_time_mean_sec": 34.62792790000094,
+      "inference_time_mean_sec": 0.20686999999452382,
+      "flops_per_sample": 181488,
+      "params": 175634,
+      "accuracy_per_mflop_mean": 5.132570748479238,
+      "final_l1_entropy_mean": 0.9452263718000546,
+      "final_l2_entropy_mean": 0.02946405184492225
     },
     {
       "model": "v4_economic",
@@ -532,7 +756,9 @@
       "inference_time_mean_sec": 0.18335549999028444,
       "flops_per_sample": 185024,
       "params": 177406,
-      "accuracy_per_mflop_mean": 5.058262711864407
+      "accuracy_per_mflop_mean": 5.058262711864407,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -547,7 +773,26 @@
       "inference_time_mean_sec": 0.24300610000500455,
       "flops_per_sample": 210144,
       "params": 205894,
-      "accuracy_per_mflop_mean": 4.42363331810568
+      "accuracy_per_mflop_mean": 4.42363331810568,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
+    },
+    {
+      "model": "v4_economic",
+      "hidden": 112,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "seeds": 1,
+      "accuracy_mean": 0.9307,
+      "final_loss_mean": 0.22750291851433085,
+      "train_time_mean_sec": 38.55672659998527,
+      "inference_time_mean_sec": 0.2296906000119634,
+      "flops_per_sample": 213744,
+      "params": 207698,
+      "accuracy_per_mflop_mean": 4.354274272026349,
+      "final_l1_entropy_mean": 0.9990440322208294,
+      "final_l2_entropy_mean": 0.10993799351977508
     },
     {
       "model": "v4_economic",
@@ -562,7 +807,26 @@
       "inference_time_mean_sec": 0.1953683000174351,
       "flops_per_sample": 217344,
       "params": 209502,
-      "accuracy_per_mflop_mean": 4.282611896348645
+      "accuracy_per_mflop_mean": 4.282611896348645,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
+    },
+    {
+      "model": "v4_economic",
+      "hidden": 128,
+      "states": 2,
+      "gate_hidden": 6,
+      "use_skip": false,
+      "seeds": 1,
+      "accuracy_mean": 0.9302,
+      "final_loss_mean": 0.23466286640368406,
+      "train_time_mean_sec": 41.319062200025655,
+      "inference_time_mean_sec": 0.2572757000452839,
+      "flops_per_sample": 247024,
+      "params": 240786,
+      "accuracy_per_mflop_mean": 3.7656260120474125,
+      "final_l1_entropy_mean": 0.9010891843657631,
+      "final_l2_entropy_mean": 0.7364834525537625
     },
     {
       "model": "v4_economic",
@@ -577,7 +841,9 @@
       "inference_time_mean_sec": 0.2222932000295259,
       "flops_per_sample": 250688,
       "params": 242622,
-      "accuracy_per_mflop_mean": 3.7464896604544293
+      "accuracy_per_mflop_mean": 3.7464896604544293,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -592,7 +858,9 @@
       "inference_time_mean_sec": 0.3806738000130281,
       "flops_per_sample": 484160,
       "params": 359614,
-      "accuracy_per_mflop_mean": 1.9369629874421679
+      "accuracy_per_mflop_mean": 1.9369629874421679,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -607,7 +875,9 @@
       "inference_time_mean_sec": 0.22716710000531748,
       "flops_per_sample": 265344,
       "params": 249966,
-      "accuracy_per_mflop_mean": 3.509406657018813
+      "accuracy_per_mflop_mean": 3.509406657018813,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -622,7 +892,9 @@
       "inference_time_mean_sec": 0.3688434999785386,
       "flops_per_sample": 498816,
       "params": 366958,
-      "accuracy_per_mflop_mean": 1.88185623556582
+      "accuracy_per_mflop_mean": 1.88185623556582,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -637,7 +909,9 @@
       "inference_time_mean_sec": 0.23690960003295913,
       "flops_per_sample": 250752,
       "params": 476642,
-      "accuracy_per_mflop_mean": 3.705254594180705
+      "accuracy_per_mflop_mean": 3.705254594180705,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -652,7 +926,9 @@
       "inference_time_mean_sec": 0.3900178999756463,
       "flops_per_sample": 484224,
       "params": 593634,
-      "accuracy_per_mflop_mean": 1.9205987311657415
+      "accuracy_per_mflop_mean": 1.9205987311657415,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -667,7 +943,9 @@
       "inference_time_mean_sec": 0.2715372999664396,
       "flops_per_sample": 265472,
       "params": 484018,
-      "accuracy_per_mflop_mean": 3.4964139344262297
+      "accuracy_per_mflop_mean": 3.4964139344262297,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     },
     {
       "model": "v4_economic",
@@ -682,7 +960,9 @@
       "inference_time_mean_sec": 0.436853900027927,
       "flops_per_sample": 498944,
       "params": 601010,
-      "accuracy_per_mflop_mean": 1.871352296049256
+      "accuracy_per_mflop_mean": 1.871352296049256,
+      "final_l1_entropy_mean": null,
+      "final_l2_entropy_mean": null
     }
   ]
 }
