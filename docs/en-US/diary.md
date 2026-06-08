@@ -127,3 +127,29 @@ That would suggest specialization is replacing part of the active width of the d
 **Conclusion:** V4 learns MNIST and stays close in accuracy, but it does not beat the efficiency curve. MLP 64 was both cheaper and more accurate than every V4 tested in this matrix.
 
 **Interpretation:** In high-dimensional inputs, the cost of the gate, skip path, and expert structure may outweigh the savings from Top-1 routing. The next step should not be CIFAR or blind 10-seed repetition of this configuration; it should be a more economical V4 variant for MNIST.
+
+---
+
+### Experiment 8: MNIST Economic V4 (Seed 1)
+**Hypothesis:** Reducing V4 overhead (fewer states, smaller gate, optional skip) recovers competitiveness on the Accuracy/FLOPs curve.
+**Result:** Partially confirmed.
+
+**Setup:**
+- Dataset: full MNIST
+- Seed: 1
+- Epochs: 5
+- Baselines: MLP 64 and MLP 128
+- V4: hidden 64/128, states 2/4, gate_hidden 8/16, skip on/off
+
+**Best results:**
+
+| Model | Hidden | States | Gate | Skip | Accuracy | FLOPs/sample | Acc/MFLOP |
+| --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| MLP | 64 | - | - | - | 93.71% | 109,824 | 8.5327 |
+| MLP | 128 | - | - | - | 93.80% | 236,032 | 3.9740 |
+| V4 | 128 | 2 | 8 | no | 93.92% | 250,688 | 3.7465 |
+| V4 | 64 | 2 | 8 | no | 93.31% | 123,456 | 7.5582 |
+
+**Conclusion:** The economic direction is correct: 2 states, a small gate, and no skip greatly improve cost-effectiveness. The best economic V4 beat MLP 128 in accuracy (+0.12pp), but still used ~6.2% more FLOPs. The economic V4 64 got close to MLP 64, but still lost in both accuracy and FLOPs.
+
+**Next target:** test V4 hidden 96, 2 states, gate 4/8, no skip. The goal is to find an intermediate point that keeps ~93.7-93.9% with fewer FLOPs than MLP 128.

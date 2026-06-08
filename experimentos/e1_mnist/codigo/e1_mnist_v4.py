@@ -161,15 +161,16 @@ class SparseV4Layer:
         seed: int,
         gate_hidden: int,
         temperature: float,
+        use_skip: bool,
     ):
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.n_states = n_states
         self.temperature = temperature
+        self.use_skip = use_skip
 
         rng = np.random.RandomState(seed)
         rng_gate = np.random.RandomState(seed + 100)
-        rng_skip = np.random.RandomState(seed + 200)
 
         scale = np.sqrt(2.0 / input_dim)
         self.w = [rng.randn(input_dim, output_dim).astype(np.float32) * scale for _ in range(n_states)]
@@ -178,8 +179,13 @@ class SparseV4Layer:
         self.gb1 = np.zeros(gate_hidden, dtype=np.float32)
         self.gw2 = rng_gate.randn(gate_hidden, n_states).astype(np.float32) * np.sqrt(2.0 / gate_hidden)
         self.gb2 = np.zeros(n_states, dtype=np.float32)
-        self.skip_w = rng_skip.randn(input_dim, output_dim).astype(np.float32) * scale
-        self.skip_b = np.zeros(output_dim, dtype=np.float32)
+        if use_skip:
+            rng_skip = np.random.RandomState(seed + 200)
+            self.skip_w = rng_skip.randn(input_dim, output_dim).astype(np.float32) * scale
+            self.skip_b = np.zeros(output_dim, dtype=np.float32)
+        else:
+            self.skip_w = None
+            self.skip_b = None
 
     def gate_probs(self, x: np.ndarray) -> np.ndarray:
         h_pre = x @ self.gw1 + self.gb1
@@ -207,13 +213,16 @@ class SparseV4Layer:
         out = np.zeros((len(x), self.output_dim), dtype=np.float32)
         for i in range(self.n_states):
             out += self.hard[:, i:i + 1] * self.states[i]
-        out += x @ self.skip_w + self.skip_b
+        if self.use_skip:
+            out += x @ self.skip_w + self.skip_b
         return out
 
     def forward_sparse(self, x: np.ndarray) -> np.ndarray:
         probs = self.gate_probs(x)
         indices = np.argmax(probs, axis=1)
-        out = x @ self.skip_w + self.skip_b
+        out = np.zeros((len(x), self.output_dim), dtype=np.float32)
+        if self.use_skip:
+            out += x @ self.skip_w + self.skip_b
         for i in range(self.n_states):
             mask = indices == i
             if np.any(mask):
@@ -224,9 +233,11 @@ class SparseV4Layer:
         batch = grad.shape[0]
         x = self.x
 
-        dskip_w = (x.T @ grad) / batch + l2 * self.skip_w
-        dskip_b = grad.mean(axis=0)
-        dx_skip = grad @ self.skip_w.T
+        dx_skip = np.zeros_like(x)
+        if self.use_skip:
+            dskip_w = (x.T @ grad) / batch + l2 * self.skip_w
+            dskip_b = grad.mean(axis=0)
+            dx_skip = grad @ self.skip_w.T
 
         dx_states = np.zeros_like(x)
         for i in range(self.n_states):
@@ -253,8 +264,9 @@ class SparseV4Layer:
         dgb1 = dgate_h.mean(axis=0)
         dx_gate = dgate_h @ self.gw1.T
 
-        self.skip_w -= lr * dskip_w
-        self.skip_b -= lr * dskip_b
+        if self.use_skip:
+            self.skip_w -= lr * dskip_w
+            self.skip_b -= lr * dskip_b
         self.gw2 -= lr * dgw2
         self.gb2 -= lr * dgb2
         self.gw1 -= lr * dgw1
@@ -265,7 +277,8 @@ class SparseV4Layer:
     def params(self) -> int:
         total = sum(w.size for w in self.w) + sum(b.size for b in self.b)
         total += self.gw1.size + self.gb1.size + self.gw2.size + self.gb2.size
-        total += self.skip_w.size + self.skip_b.size
+        if self.use_skip:
+            total += self.skip_w.size + self.skip_b.size
         return total
 
 
@@ -279,9 +292,11 @@ class SparseV4MLP:
         seed: int,
         gate_hidden: int,
         temperature: float,
+        use_skip: bool,
     ):
-        self.l1 = SparseV4Layer(input_dim, hidden, n_states, seed, gate_hidden, temperature)
-        self.l2 = SparseV4Layer(hidden, hidden, n_states, seed + 10, gate_hidden, temperature)
+        self.use_skip = use_skip
+        self.l1 = SparseV4Layer(input_dim, hidden, n_states, seed, gate_hidden, temperature, use_skip)
+        self.l2 = SparseV4Layer(hidden, hidden, n_states, seed + 10, gate_hidden, temperature, use_skip)
         self.l3 = LinearLayer(hidden, output_dim, seed + 20)
 
     def forward(self, x: np.ndarray) -> np.ndarray:
@@ -377,24 +392,24 @@ def dense_flops(input_dim: int, hidden: int, output_dim: int) -> int:
     return 2 * (input_dim * hidden + hidden * hidden + hidden * output_dim)
 
 
-def v4_sparse_flops(input_dim: int, hidden: int, output_dim: int, n_states: int, gate_hidden: int) -> int:
+def v4_sparse_flops(input_dim: int, hidden: int, output_dim: int, n_states: int, gate_hidden: int, use_skip: bool) -> int:
     l1_gate = 2 * (input_dim * gate_hidden + gate_hidden * n_states)
     l1_active = 2 * input_dim * hidden
-    l1_skip = 2 * input_dim * hidden
+    l1_skip = 2 * input_dim * hidden if use_skip else 0
     l2_gate = 2 * (hidden * gate_hidden + gate_hidden * n_states)
     l2_active = 2 * hidden * hidden
-    l2_skip = 2 * hidden * hidden
+    l2_skip = 2 * hidden * hidden if use_skip else 0
     out = 2 * hidden * output_dim
     return l1_gate + l1_active + l1_skip + l2_gate + l2_active + l2_skip + out
 
 
-def v4_dense_executed_flops(input_dim: int, hidden: int, output_dim: int, n_states: int, gate_hidden: int) -> int:
+def v4_dense_executed_flops(input_dim: int, hidden: int, output_dim: int, n_states: int, gate_hidden: int, use_skip: bool) -> int:
     l1_gate = 2 * (input_dim * gate_hidden + gate_hidden * n_states)
     l1_states = 2 * n_states * input_dim * hidden
-    l1_skip = 2 * input_dim * hidden
+    l1_skip = 2 * input_dim * hidden if use_skip else 0
     l2_gate = 2 * (hidden * gate_hidden + gate_hidden * n_states)
     l2_states = 2 * n_states * hidden * hidden
-    l2_skip = 2 * hidden * hidden
+    l2_skip = 2 * hidden * hidden if use_skip else 0
     out = 2 * hidden * output_dim
     return l1_gate + l1_states + l1_skip + l2_gate + l2_states + l2_skip + out
 
@@ -405,11 +420,12 @@ def find_v4_hidden_under_flops(
     output_dim: int,
     n_states: int,
     gate_hidden: int,
-    max_hidden: int = 512,
+        max_hidden: int = 512,
+    use_skip: bool = True,
 ) -> int:
     best = 1
     for hidden in range(1, max_hidden + 1):
-        flops = v4_sparse_flops(input_dim, hidden, output_dim, n_states, gate_hidden)
+        flops = v4_sparse_flops(input_dim, hidden, output_dim, n_states, gate_hidden, use_skip)
         if flops <= target_flops:
             best = hidden
         else:
@@ -426,6 +442,7 @@ def main() -> int:
     parser.add_argument("--v4-hidden", type=int, default=0, help="0 escolhe automaticamente por teto de FLOPs")
     parser.add_argument("--states", type=int, default=4)
     parser.add_argument("--gate-hidden", type=int, default=32)
+    parser.add_argument("--no-skip", action="store_true")
     parser.add_argument("--lr", type=float, default=0.01)
     parser.add_argument("--l2", type=float, default=1e-4)
     parser.add_argument("--temperature", type=float, default=1.0)
@@ -449,12 +466,14 @@ def main() -> int:
 
     dense_target_flops = dense_flops(input_dim, args.hidden, output_dim)
     if args.model in {"both", "v4"} and args.v4_hidden <= 0:
+        use_skip = not args.no_skip
         args.v4_hidden = find_v4_hidden_under_flops(
             dense_target_flops,
             input_dim,
             output_dim,
             args.states,
             args.gate_hidden,
+            use_skip=use_skip,
         )
         print(f"V4 hidden auto: {args.v4_hidden} (FLOPs_sparse <= baseline)")
 
@@ -497,8 +516,12 @@ def main() -> int:
             args.seed,
             args.gate_hidden,
             args.temperature,
+            not args.no_skip,
         )
-        print(f"\nV4 Sparse: hidden={args.v4_hidden} states={args.states} gate_hidden={args.gate_hidden} params={v4.params()}")
+        print(
+            f"\nV4 Sparse: hidden={args.v4_hidden} states={args.states} "
+            f"gate_hidden={args.gate_hidden} skip={not args.no_skip} params={v4.params()}"
+        )
         print("\n--- Treino V4 Sparse ---")
         v4_history, v4_train_time = train(
             v4, x_train, y_train, x_test, y_test, args.epochs, args.batch_size, args.lr, args.l2, True
@@ -507,13 +530,14 @@ def main() -> int:
         v4_acc = float(np.mean(v4_pred == y_test))
         usage_l1, usage_l2 = v4.gate_usage(x_test, y_test, args.batch_size)
 
-        flops_v4_sparse = v4_sparse_flops(input_dim, args.v4_hidden, output_dim, args.states, args.gate_hidden)
-        flops_v4_dense = v4_dense_executed_flops(input_dim, args.v4_hidden, output_dim, args.states, args.gate_hidden)
+        flops_v4_sparse = v4_sparse_flops(input_dim, args.v4_hidden, output_dim, args.states, args.gate_hidden, not args.no_skip)
+        flops_v4_dense = v4_dense_executed_flops(input_dim, args.v4_hidden, output_dim, args.states, args.gate_hidden, not args.no_skip)
 
         result["v4_sparse"] = {
             "hidden": args.v4_hidden,
             "states": args.states,
             "gate_hidden": args.gate_hidden,
+            "use_skip": not args.no_skip,
             "params": v4.params(),
             "accuracy": v4_acc,
             "train_time_sec": v4_train_time,

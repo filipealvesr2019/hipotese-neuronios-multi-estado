@@ -1,0 +1,134 @@
+{
+  "experiment": "E1_MNIST",
+  "model_mode": "v4",
+  "seed": 1,
+  "dataset": {
+    "train": 60000,
+    "test": 10000,
+    "input_dim": 784,
+    "classes": 10
+  },
+  "v4_sparse": {
+    "hidden": 64,
+    "states": 2,
+    "gate_hidden": 8,
+    "use_skip": true,
+    "params": 170686,
+    "accuracy": 0.9349,
+    "train_time_sec": 40.04045530001167,
+    "inference_time_sec": 0.24279899999964982,
+    "estimated_sparse_inference_flops_per_sample": 232000,
+    "estimated_dense_executed_flops_per_sample": 340544,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 0.7408666938971384,
+        "test_acc": 0.8856
+      },
+      {
+        "epoch": 2,
+        "loss": 0.3362803036471357,
+        "test_acc": 0.9106
+      },
+      {
+        "epoch": 3,
+        "loss": 0.26343894707111815,
+        "test_acc": 0.9242
+      },
+      {
+        "epoch": 4,
+        "loss": 0.21933103381569466,
+        "test_acc": 0.931
+      },
+      {
+        "epoch": 5,
+        "loss": 0.19308541046345493,
+        "test_acc": 0.9349
+      }
+    ],
+    "gate_usage_l1_by_class": [
+      [
+        30,
+        950
+      ],
+      [
+        292,
+        843
+      ],
+      [
+        398,
+        634
+      ],
+      [
+        244,
+        766
+      ],
+      [
+        279,
+        703
+      ],
+      [
+        73,
+        819
+      ],
+      [
+        27,
+        931
+      ],
+      [
+        408,
+        620
+      ],
+      [
+        129,
+        845
+      ],
+      [
+        245,
+        764
+      ]
+    ],
+    "gate_usage_l2_by_class": [
+      [
+        82,
+        898
+      ],
+      [
+        0,
+        1135
+      ],
+      [
+        19,
+        1013
+      ],
+      [
+        2,
+        1008
+      ],
+      [
+        1,
+        981
+      ],
+      [
+        1,
+        891
+      ],
+      [
+        6,
+        952
+      ],
+      [
+        30,
+        998
+      ],
+      [
+        6,
+        968
+      ],
+      [
+        0,
+        1009
+      ]
+    ]
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "experiment": "E1_MNIST",
+  "model_mode": "v4",
+  "seed": 1,
+  "dataset": {
+    "train": 60000,
+    "test": 10000,
+    "input_dim": 784,
+    "classes": 10
+  },
+  "v4_sparse": {
+    "hidden": 128,
+    "states": 2,
+    "gate_hidden": 16,
+    "use_skip": false,
+    "params": 249966,
+    "accuracy": 0.9312,
+    "train_time_sec": 43.006835100008175,
+    "inference_time_sec": 0.22716710000531748,
+    "estimated_sparse_inference_flops_per_sample": 265344,
+    "estimated_dense_executed_flops_per_sample": 498816,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 0.9836857683807646,
+        "test_acc": 0.8773
+      },
+      {
+        "epoch": 2,
+        "loss": 0.3819889881089489,
+        "test_acc": 0.9057
+      },
+      {
+        "epoch": 3,
+        "loss": 0.2932799930299803,
+        "test_acc": 0.919
+      },
+      {
+        "epoch": 4,
+        "loss": 0.24920518948772113,
+        "test_acc": 0.9263
+      },
+      {
+        "epoch": 5,
+        "loss": 0.21930028168457139,
+        "test_acc": 0.9312
+      }
+    ],
+    "gate_usage_l1_by_class": [
+      [
+        979,
+        1
+      ],
+      [
+        1135,
+        0
+      ],
+      [
+        1022,
+        10
+      ],
+      [
+        1009,
+        1
+      ],
+      [
+        973,
+        9
+      ],
+      [
+        891,
+        1
+      ],
+      [
+        907,
+        51
+      ],
+      [
+        1009,
+        19
+      ],
+      [
+        969,
+        5
+      ],
+      [
+        1002,
+        7
+      ]
+    ],
+    "gate_usage_l2_by_class": [
+      [
+        978,
+        2
+      ],
+      [
+        18,
+        1117
+      ],
+      [
+        999,
+        33
+      ],
+      [
+        675,
+        335
+      ],
+      [
+        975,
+        7
+      ],
+      [
+        873,
+        19
+      ],
+      [
+        709,
+        249
+      ],
+      [
+        1010,
+        18
+      ],
+      [
+        939,
+        35
+      ],
+      [
+        1004,
+        5
+      ]
+    ]
+  }
+}

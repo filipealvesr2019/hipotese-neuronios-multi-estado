@@ -1,0 +1,134 @@
+{
+  "experiment": "E1_MNIST",
+  "model_mode": "v4",
+  "seed": 1,
+  "dataset": {
+    "train": 60000,
+    "test": 10000,
+    "input_dim": 784,
+    "classes": 10
+  },
+  "v4_sparse": {
+    "hidden": 128,
+    "states": 2,
+    "gate_hidden": 8,
+    "use_skip": false,
+    "params": 242622,
+    "accuracy": 0.9392,
+    "train_time_sec": 41.933771100011654,
+    "inference_time_sec": 0.2222932000295259,
+    "estimated_sparse_inference_flops_per_sample": 250688,
+    "estimated_dense_executed_flops_per_sample": 484160,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.0228054783170892,
+        "test_acc": 0.8821
+      },
+      {
+        "epoch": 2,
+        "loss": 0.3564925617618137,
+        "test_acc": 0.9137
+      },
+      {
+        "epoch": 3,
+        "loss": 0.27062202220831216,
+        "test_acc": 0.9267
+      },
+      {
+        "epoch": 4,
+        "loss": 0.22749652852000093,
+        "test_acc": 0.9346
+      },
+      {
+        "epoch": 5,
+        "loss": 0.20157201980262301,
+        "test_acc": 0.9392
+      }
+    ],
+    "gate_usage_l1_by_class": [
+      [
+        1,
+        979
+      ],
+      [
+        0,
+        1135
+      ],
+      [
+        246,
+        786
+      ],
+      [
+        32,
+        978
+      ],
+      [
+        4,
+        978
+      ],
+      [
+        7,
+        885
+      ],
+      [
+        3,
+        955
+      ],
+      [
+        7,
+        1021
+      ],
+      [
+        2,
+        972
+      ],
+      [
+        2,
+        1007
+      ]
+    ],
+    "gate_usage_l2_by_class": [
+      [
+        980,
+        0
+      ],
+      [
+        1135,
+        0
+      ],
+      [
+        1031,
+        1
+      ],
+      [
+        1010,
+        0
+      ],
+      [
+        982,
+        0
+      ],
+      [
+        891,
+        1
+      ],
+      [
+        958,
+        0
+      ],
+      [
+        1028,
+        0
+      ],
+      [
+        974,
+        0
+      ],
+      [
+        1009,
+        0
+      ]
+    ]
+  }
+}

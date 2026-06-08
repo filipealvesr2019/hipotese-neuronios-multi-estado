@@ -1,0 +1,134 @@
+{
+  "experiment": "E1_MNIST",
+  "model_mode": "v4",
+  "seed": 1,
+  "dataset": {
+    "train": 60000,
+    "test": 10000,
+    "input_dim": 784,
+    "classes": 10
+  },
+  "v4_sparse": {
+    "hidden": 128,
+    "states": 2,
+    "gate_hidden": 8,
+    "use_skip": true,
+    "params": 359614,
+    "accuracy": 0.9378,
+    "train_time_sec": 56.38763439998729,
+    "inference_time_sec": 0.3806738000130281,
+    "estimated_sparse_inference_flops_per_sample": 484160,
+    "estimated_dense_executed_flops_per_sample": 717632,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 0.766103343371678,
+        "test_acc": 0.8851
+      },
+      {
+        "epoch": 2,
+        "loss": 0.33546618881141493,
+        "test_acc": 0.9129
+      },
+      {
+        "epoch": 3,
+        "loss": 0.25765999643012666,
+        "test_acc": 0.9257
+      },
+      {
+        "epoch": 4,
+        "loss": 0.21177325391372398,
+        "test_acc": 0.9334
+      },
+      {
+        "epoch": 5,
+        "loss": 0.18249316512812586,
+        "test_acc": 0.9378
+      }
+    ],
+    "gate_usage_l1_by_class": [
+      [
+        69,
+        911
+      ],
+      [
+        203,
+        932
+      ],
+      [
+        613,
+        419
+      ],
+      [
+        203,
+        807
+      ],
+      [
+        463,
+        519
+      ],
+      [
+        28,
+        864
+      ],
+      [
+        270,
+        688
+      ],
+      [
+        407,
+        621
+      ],
+      [
+        53,
+        921
+      ],
+      [
+        357,
+        652
+      ]
+    ],
+    "gate_usage_l2_by_class": [
+      [
+        555,
+        425
+      ],
+      [
+        1072,
+        63
+      ],
+      [
+        878,
+        154
+      ],
+      [
+        876,
+        134
+      ],
+      [
+        627,
+        355
+      ],
+      [
+        700,
+        192
+      ],
+      [
+        576,
+        382
+      ],
+      [
+        384,
+        644
+      ],
+      [
+        895,
+        79
+      ],
+      [
+        665,
+        344
+      ]
+    ]
+  }
+}

@@ -70,3 +70,5 @@ Especialização de especialistas, roteamento efetivo e colapso recorrente da La
 **Prioridade atual:** fechar MNIST com curva Accuracy/FLOPs antes de avançar para CIFAR.
 
 **Atualização E2 MNIST:** a primeira matriz Accuracy/FLOPs em seed 1 não favoreceu a V4. O MLP 64 foi mais preciso e mais barato que V4 64/128/256. Isso sugere que a versão atual da V4 é eficiente em problemas pequenos, mas paga overhead demais em MNIST.
+
+**Atualização V4 Econômica:** reduzir overhead funcionou parcialmente. A configuração `hidden=128, 2 estados, gate=8, sem skip` atingiu 93.92% vs 93.80% do MLP 128, mas ainda com ~6.2% mais FLOPs. A direção promissora agora é explorar pontos intermediários como `hidden=96, 2 estados, gate=4/8, sem skip`.

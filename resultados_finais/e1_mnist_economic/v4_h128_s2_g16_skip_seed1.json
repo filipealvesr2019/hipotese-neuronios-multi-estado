@@ -1,0 +1,134 @@
+{
+  "experiment": "E1_MNIST",
+  "model_mode": "v4",
+  "seed": 1,
+  "dataset": {
+    "train": 60000,
+    "test": 10000,
+    "input_dim": 784,
+    "classes": 10
+  },
+  "v4_sparse": {
+    "hidden": 128,
+    "states": 2,
+    "gate_hidden": 16,
+    "use_skip": true,
+    "params": 366958,
+    "accuracy": 0.9387,
+    "train_time_sec": 56.55120539997006,
+    "inference_time_sec": 0.3688434999785386,
+    "estimated_sparse_inference_flops_per_sample": 498816,
+    "estimated_dense_executed_flops_per_sample": 732288,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 0.7237612955337077,
+        "test_acc": 0.8944
+      },
+      {
+        "epoch": 2,
+        "loss": 0.311441101140865,
+        "test_acc": 0.9208
+      },
+      {
+        "epoch": 3,
+        "loss": 0.23742328577820704,
+        "test_acc": 0.9303
+      },
+      {
+        "epoch": 4,
+        "loss": 0.19610531105579618,
+        "test_acc": 0.9359
+      },
+      {
+        "epoch": 5,
+        "loss": 0.1703051052652472,
+        "test_acc": 0.9387
+      }
+    ],
+    "gate_usage_l1_by_class": [
+      [
+        947,
+        33
+      ],
+      [
+        1134,
+        1
+      ],
+      [
+        989,
+        43
+      ],
+      [
+        985,
+        25
+      ],
+      [
+        704,
+        278
+      ],
+      [
+        845,
+        47
+      ],
+      [
+        922,
+        36
+      ],
+      [
+        849,
+        179
+      ],
+      [
+        883,
+        91
+      ],
+      [
+        891,
+        118
+      ]
+    ],
+    "gate_usage_l2_by_class": [
+      [
+        962,
+        18
+      ],
+      [
+        4,
+        1131
+      ],
+      [
+        531,
+        501
+      ],
+      [
+        433,
+        577
+      ],
+      [
+        63,
+        919
+      ],
+      [
+        551,
+        341
+      ],
+      [
+        416,
+        542
+      ],
+      [
+        793,
+        235
+      ],
+      [
+        196,
+        778
+      ],
+      [
+        303,
+        706
+      ]
+    ]
+  }
+}
