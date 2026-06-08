@@ -4,6 +4,18 @@
 
 ---
 
+## Status da Pesquisa
+
+**Hipótese original:** neurônios MultiEstado são intrinsecamente superiores a neurônios tradicionais.  
+**Status:** refutada.
+
+**Hipótese revisada:** especialistas compactos com roteamento esparso Top-1 podem manter o desempenho de redes densas reduzindo computação na inferência.  
+**Status:** parcialmente confirmada em datasets pequenos.
+
+**Formulação mais honesta:** a hipótese de superioridade do neurônio MultiEstado foi refutada; a hipótese mais restrita de computação condicional eficiente via especialistas esparsos recebeu evidência experimental positiva em problemas pequenos.
+
+---
+
 ✅ **Estados aprendem representações diferentes.**
 Correlação entre estados ≈ 0.01. Eles não se tornam cópias uns dos outros. Confirmado no Teste 12.
 

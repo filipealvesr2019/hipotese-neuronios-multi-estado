@@ -74,3 +74,28 @@
 - 20-Features: Trad 90.08% vs V4 89.88% | V4 Wins: 11/30
 
 **Conclusão da Fase 1:** A arquitetura de especialistas compactos com roteamento esparso reproduz de forma robusta e consistente o desempenho de MLPs tradicionais em múltiplos domínios, gastando aproximadamente metade do custo computacional de inferência.
+
+---
+
+### Síntese da Fase 1 — Reformulação da Hipótese
+**Status da pesquisa:** Promissor, mas ainda não escalado.
+
+**Hipótese original:** Neurônios MultiEstado são intrinsecamente superiores a neurônios tradicionais.
+**Resultado:** Refutada.
+
+**Hipótese revisada:** Especialistas compactos com roteamento esparso Top-1 podem reproduzir o desempenho de redes densas usando menos computação na inferência.
+**Resultado:** Parcialmente confirmada em datasets pequenos.
+
+**Evidência acumulada:**
+- V1 falhou: soma linear de estados colapsa em uma transformação efetivamente densa.
+- V2 falhou parcialmente: gate Softmax especializa na primeira camada, mas vaza ruído.
+- V3 aproximou do baseline: gate MLP + skip connections recuperam desempenho.
+- V4 empatou tecnicamente: Top-1 Sparse Routing elimina vazamento de estados ruins.
+- Validação com 30 seeds reduziu o risco de o resultado ser apenas uma seed favorável.
+- Stress test em Moons, Spirals e 20 features manteve o empate técnico.
+
+**Conclusão atual:** A V4 não demonstrou superioridade absoluta em acurácia. O resultado positivo é eficiência: desempenho semelhante ao MLP tradicional com aproximadamente metade dos FLOPs na inferência.
+
+**Risco principal:** Todos os testes ainda estão em problemas pequenos, com poucas dimensões e poucas classes. Ainda não há evidência suficiente para afirmar escalabilidade para visão computacional real ou Transformers.
+
+**Próximo marco crítico:** MNIST.

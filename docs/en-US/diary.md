@@ -37,3 +37,28 @@
 **Hypothesis:** The efficiency discovered in V4 holds across complex domains.
 **Result:** Confirmed.
 **Conclusion:** V4 matched the Traditional MLP across all tested complex datasets, solidifying the architecture's validity.
+
+---
+
+### Phase 1 Synthesis: Hypothesis Reformulation
+**Research status:** Promising, but not yet scaled.
+
+**Original hypothesis:** MultiState neurons are intrinsically superior to traditional neurons.
+**Result:** Refuted.
+
+**Revised hypothesis:** Compact experts with Top-1 sparse routing can reproduce the performance of dense networks while using less inference compute.
+**Result:** Partially supported on small datasets.
+
+**Accumulated evidence:**
+- V1 failed: linear state aggregation collapses into an effectively dense transformation.
+- V2 partially failed: the Softmax gate specializes in the first layer, but leaks noise.
+- V3 approached the baseline: MLP gate + skip connections recovered performance.
+- V4 reached a technical tie: Top-1 Sparse Routing eliminated leakage from bad states.
+- 30-seed validation reduced the risk that the result came from a favorable seed.
+- Stress tests on Moons, Spirals, and 20-feature data preserved the technical tie.
+
+**Current conclusion:** V4 has not shown absolute accuracy superiority. The positive result is efficiency: similar performance to a traditional MLP with roughly half the inference FLOPs.
+
+**Main risk:** All experiments are still small, with low dimensionality and few classes. There is not enough evidence yet to claim scalability to real computer vision or Transformers.
+
+**Next critical milestone:** MNIST.
