@@ -85,3 +85,17 @@
 **Observation:** V4 survived MNIST and stayed close to the MLP, but the FLOPs gain in this configuration was small (~1.5%). In wall-clock time, the NumPy V4 implementation was slower because training still computes all experts and sparse inference uses Python/NumPy masking rather than optimized kernels.
 
 **Provisional conclusion:** MNIST did not refute V4, but it also did not yet confirm the strong hypothesis of same accuracy with a substantial FLOPs reduction. The next step is an Accuracy/FLOPs curve across multiple hidden sizes and seeds.
+
+**Recurring behavior:** MNIST repeated the pattern observed on synthetic datasets: Layer 1 shows more distributed specialization, while Layer 2 tends to collapse into a small number of experts. Since this pattern appeared on Circles, Moons, Spirals, 20-Features, and MNIST, it should be treated as an architectural property until proven otherwise, not as an isolated accident.
+
+**Strong-result criterion:** The result that would meaningfully strengthen the hypothesis is a smaller V4 matching a larger MLP, for example:
+
+```text
+MLP 128 ≈ V4 64
+or
+MLP 256 ≈ V4 128
+```
+
+That would suggest specialization is replacing part of the active width of the dense network.
+
+**Next official milestone:** close MNIST with the `10 seeds × 6 configurations` matrix before moving to CIFAR.

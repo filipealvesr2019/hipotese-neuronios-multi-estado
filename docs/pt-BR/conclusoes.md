@@ -50,3 +50,21 @@ Todos os testes foram em redes rasas (2 camadas) e datasets pequenos. A hipótes
 
 ⚠️ **MNIST preliminar ainda não confirma a hipótese forte.**
 Em single seed, a V4 ficou próxima do MLP (92.97% vs 93.80%), mas com redução pequena de FLOPs estimados (~1.5%). O resultado é promissor como sobrevivência ao MNIST, mas ainda exige curva Accuracy/FLOPs e múltiplas seeds.
+
+---
+
+## Avaliação de Maturidade
+
+**Hipótese original:** 0% viva.  
+Foi refutada pela V1 e pelos testes subsequentes.
+
+**Arquitetura V4:** promissora.  
+O padrão V1 → V2 → V3 → V4 forma uma narrativa técnica coerente: cada versão resolveu um gargalo observado na anterior.
+
+**Evidência de vantagem prática:** ainda limitada.  
+Há redução forte de FLOPs em problemas pequenos, mas o MNIST preliminar ainda não mostrou economia substancial.
+
+**Evidência de fenômeno real:** forte.  
+Especialização de especialistas, roteamento efetivo e colapso recorrente da Layer 2 aparecem em múltiplos domínios. A questão aberta é se isso escala.
+
+**Prioridade atual:** fechar MNIST com curva Accuracy/FLOPs antes de avançar para CIFAR.

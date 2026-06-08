@@ -23,3 +23,21 @@
 ⚠️ **Load Balancing struggles in shallow networks:** The MoE auxiliary loss did not improve the mode collapse in Layer 2, likely due to the limited depth and capacity of the network.
 
 ⚠️ **Preliminary MNIST does not yet confirm the strong hypothesis:** In a single seed run, V4 stayed close to the MLP (92.97% vs 93.80%), but the estimated FLOPs reduction was small (~1.5%). This is promising as MNIST survival, but still requires an Accuracy/FLOPs curve and multiple seeds.
+
+---
+
+## Maturity Assessment
+
+**Original hypothesis:** 0% alive.  
+It was refuted by V1 and the subsequent tests.
+
+**V4 architecture:** promising.  
+The V1 → V2 → V3 → V4 sequence forms a coherent technical narrative: each version addressed a bottleneck observed in the previous one.
+
+**Evidence of practical advantage:** still limited.  
+There is a strong FLOPs reduction on small problems, but the preliminary MNIST run has not yet shown substantial savings.
+
+**Evidence of a real phenomenon:** strong.  
+Expert specialization, effective routing, and recurring Layer 2 collapse appear across multiple domains. The open question is whether this scales.
+
+**Current priority:** close MNIST with an Accuracy/FLOPs curve before moving to CIFAR.
