@@ -28,13 +28,20 @@ Rigorous stress tests across 30 seeds demonstrated a **technical tie** in accura
 
 **Setup:** V4 h128/s2/g8/no-skip (250k FLOPs) vs MLP 128 (236k FLOPs). Full MNIST (60k train, 10k test). Batch=128, lr=0.01, l2=1e-4.
 
-### 10-seed head-to-head
+### 20-seed head-to-head
 
-| Metric | MLP 128 | V4 s=2 |
+| Metric | MLP 128 | V4 s=2 (20 seeds) |
+|--------|---------|-------------------|
+| Mean accuracy | **95.05%** ± 0.15% | 94.70% ± 0.35% |
+| Mean diff | | +0.35pp (MLP leads) |
+
+### At equal parameters (242k)
+
+| Metric | MLP 235 | V4 s=2 |
 |--------|---------|--------|
-| Mean accuracy | **95.05%** ± 0.15% | 94.78% ± 0.36% |
-| Head-to-head | MLP wins 8/10 | V4 wins 2/10 |
-| Mean diff | | +0.28pp (MLP leads) |
+| Mean accuracy | **95.19%** ± 0.10% | 94.70% ± 0.35% |
+| FLOPs | 483k | **250k (48% less)** |
+| Acc/MFLOP | 1.97 | **3.78 (92% more)** |
 
 ### States scale (seed 1)
 

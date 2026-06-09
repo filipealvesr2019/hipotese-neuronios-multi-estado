@@ -6,14 +6,15 @@
 
 ## Estado Atual (resumo executivo)
 
-**V4 s=2/g=8/no-skip vs MLP 128 — 10 seeds MNIST:**
+**V4 s=2/g=8/no-skip vs MLP — 20 seeds MNIST:**
 
 | Métrica | MLP 128 | MLP 235 (242k params) | V4 s=2 (242k params) |
 |---------|---------|-----------------------|----------------------|
-| Média   | 95.05%  | **95.19%**            | 94.78%               |
-| Std     | ±0.15%  | ±0.10%                | ±0.36%               |
+| Seeds   | 10      | 10                    | **20**               |
+| Média   | 95.05%  | **95.19%**            | 94.70%               |
+| Std     | ±0.15%  | ±0.10%                | ±0.35%               |
 | FLOPs   | 236k    | 483k                  | **250k**             |
-| Acc/MFLOP | 4.03  | 1.97                   | **3.79**             |
+| Acc/MFLOP | 4.03  | 1.97                   | **3.78**             |
 
 **Descobertas-chave já validadas:**
 
