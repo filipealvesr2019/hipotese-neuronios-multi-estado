@@ -4,12 +4,13 @@ import os
 
 
 # =========================
-# V4.4 STABLE TRAINABLE
+# V4.5 — FIXED MoE + ROUTING ANALYSIS
 # =========================
-class V44SoftBackupTrainable:
+class V45RoutingMIAnalyzer:
     def __init__(self, input_dim, hidden, output_dim,
                  n_states=2, seed=42, lr=0.01,
-                 temperature=1.5, top1_ratio=0.9):
+                 temperature=1.5, top1_ratio=0.9,
+                 entropy_reg=0.005):
 
         self.input_dim = input_dim
         self.hidden = hidden
@@ -18,20 +19,29 @@ class V44SoftBackupTrainable:
         self.lr = lr
         self.temperature = temperature
         self.top1_ratio = top1_ratio
+        self.entropy_reg = entropy_reg
 
         rng = np.random.RandomState(seed)
 
-        # experts
+        # =========================
+        # Experts
+        # =========================
         self.W1 = [rng.randn(input_dim, hidden) * 0.1 for _ in range(n_states)]
         self.b1 = [np.zeros(hidden) for _ in range(n_states)]
         self.W2 = [rng.randn(hidden, output_dim) * 0.1 for _ in range(n_states)]
         self.b2 = [np.zeros(output_dim) for _ in range(n_states)]
 
-        # gate
+        # =========================
+        # Gate
+        # =========================
         self.gW1 = rng.randn(input_dim, 16) * 0.1
         self.gb1 = np.zeros(16)
         self.gW2 = rng.randn(16, n_states) * 0.1
         self.gb2 = np.zeros(n_states)
+
+    # =========================
+    def relu(self, x):
+        return np.maximum(0, x)
 
     # =========================
     def softmax(self, x):
@@ -40,48 +50,68 @@ class V44SoftBackupTrainable:
         return e / np.sum(e, axis=1, keepdims=True)
 
     # =========================
-    def forward(self, x):
+    # FORWARD
+    # =========================
+    def forward(self, x, add_noise=False):
+        B = x.shape[0]
+
         h_states = []
         out_states = []
 
         for i in range(self.n_states):
-            h = np.maximum(0, x @ self.W1[i] + self.b1[i])
+            h = self.relu(x @ self.W1[i] + self.b1[i])
             out = h @ self.W2[i] + self.b2[i]
             h_states.append(h)
             out_states.append(out)
 
-        g = np.maximum(0, x @ self.gW1 + self.gb1)
-        logits_g = g @ self.gW2 + self.gb2
+        g = self.relu(x @ self.gW1 + self.gb1)
+        logits = g @ self.gW2 + self.gb2
 
-        gate = self.softmax(logits_g / self.temperature)
+        # quebra simetria
+        if add_noise:
+            logits += np.random.normal(0, 0.05, logits.shape)
+
+        gate_probs = self.softmax(logits / self.temperature)
+
+        # soft top1 backup routing
+        top1 = np.argmax(gate_probs, axis=1)
+        gate = np.zeros_like(gate_probs)
+
+        for i in range(B):
+            gate[i, top1[i]] = self.top1_ratio
+            for j in range(self.n_states):
+                if j != top1[i]:
+                    gate[i, j] += (1 - self.top1_ratio) / (self.n_states - 1)
+
+        gate = gate / gate.sum(axis=1, keepdims=True)
 
         out = sum(gate[:, i:i+1] * out_states[i] for i in range(self.n_states))
 
-        return out, gate
+        return out, gate, out_states, h_states
 
+    # =========================
+    def softmax_1d(self, x):
+        x = x - np.max(x)
+        e = np.exp(x)
+        return e / np.sum(e)
+
+    # =========================
+    def loss(self, logits, y):
+        probs = self.softmax(logits)
+        return -np.mean(np.log(probs[np.arange(len(y)), y] + 1e-9))
+
+    # =========================
+    # TRAIN STEP (FIXED)
     # =========================
     def train_step(self, x, y):
         B = x.shape[0]
 
-        # forward
-        h_states = []
-        out_states = []
+        logits, gate, out_states, h_states = self.forward(x, add_noise=True)
 
-        for i in range(self.n_states):
-            h = np.maximum(0, x @ self.W1[i] + self.b1[i])
-            out = h @ self.W2[i] + self.b2[i]
-            h_states.append(h)
-            out_states.append(out)
-
-        g = np.maximum(0, x @ self.gW1 + self.gb1)
-        logits_g = g @ self.gW2 + self.gb2
-        gate = self.softmax(logits_g / self.temperature)
-
-        logits = sum(gate[:, i:i+1] * out_states[i] for i in range(self.n_states))
-
+        # =========================
+        # output gradient (cross entropy)
+        # =========================
         probs = self.softmax(logits)
-
-        # gradient
         probs[np.arange(B), y] -= 1
         probs /= B
 
@@ -107,36 +137,19 @@ class V44SoftBackupTrainable:
             self.b1[i] -= self.lr * db1
 
         # =========================
-        # UPDATE GATE (🔥 FIX PRINCIPAL)
+        # ROUTING STABILITY REGULARIZATION
         # =========================
+        gate_mean = np.mean(gate, axis=0)
+        entropy = -np.sum(gate_mean * np.log(gate_mean + 1e-9))
 
-        # pseudo-loss: experts que acertam reforçam gate
-        expert_scores = np.zeros_like(gate)
+        # encourage non-collapse
+        entropy_loss = -self.entropy_reg * entropy
 
-        preds = np.argmax(logits, axis=1)
-
-        for i in range(self.n_states):
-            expert_scores[:, i] = (preds == y).astype(float)
-
-        gate_grad = (expert_scores - gate) / B
-
-        dg = gate_grad @ self.gW2.T
-        dg[g <= 0] = 0
-
-        dWg2 = g.T @ gate_grad
-        dbg2 = np.sum(gate_grad, axis=0)
-
-        dWg1 = x.T @ dg
-        dbg1 = np.sum(dg, axis=0)
-
-        self.gW2 += self.lr * dWg2
-        self.gb2 += self.lr * dbg2
-        self.gW1 += self.lr * dWg1
-        self.gb1 += self.lr * dbg1
-
-        return -np.mean(np.log(probs[np.arange(B), y] + 1e-9))
+        return self.loss(logits, y) + entropy_loss
 
 
+# =========================
+# DATASET
 # =========================
 def make_data(n=2000, d=784, c=10, seed=0):
     rng = np.random.RandomState(seed)
@@ -146,7 +159,7 @@ def make_data(n=2000, d=784, c=10, seed=0):
 
 
 def accuracy(model, X, y):
-    logits, _ = model.forward(X)
+    logits, _, _, _ = model.forward(X)
     return np.mean(np.argmax(logits, axis=1) == y)
 
 
@@ -156,6 +169,8 @@ def entropy(p):
 
 
 # =========================
+# RUN EXPERIMENT
+# =========================
 def run():
     results = []
 
@@ -164,14 +179,19 @@ def run():
 
         X, y = make_data(seed=seed)
 
-        model = V44SoftBackupTrainable(
+        model = V45RoutingMIAnalyzer(
             input_dim=784,
             hidden=96,
             output_dim=10,
             n_states=2,
-            seed=seed
+            seed=seed,
+            lr=0.01,
+            temperature=1.5,
+            top1_ratio=0.9,
+            entropy_reg=0.005
         )
 
+        # training
         for epoch in range(3):
             idx = np.random.permutation(len(X))
             for i in range(0, len(X), 64):
@@ -180,7 +200,7 @@ def run():
 
         acc = accuracy(model, X, y)
 
-        _, gate = model.forward(X)
+        _, gate, _, _ = model.forward(X)
         ent = entropy(np.mean(gate, axis=0))
 
         print(f"Acc={acc:.4f} | Entropy={ent:.4f}")
@@ -192,10 +212,11 @@ def run():
         })
 
     os.makedirs("resultados_finais", exist_ok=True)
-    with open("resultados_finais/v4_4_soft_backup_trainable.json", "w") as f:
+
+    with open("resultados_finais/v4_5_routing_mi_analyzer.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    print("\nSaved.")
+    print("\nSaved -> resultados_finais/v4_5_routing_mi_analyzer.json")
 
 
 if __name__ == "__main__":

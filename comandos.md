@@ -3,4 +3,5 @@
 
  python "experimentos/V4.4 Soft Backup trainable.py"   
 
- python "experimentos/V4.5 — Routing Mutual Information Analyzer.py" 
+
+ python experimentos\V4_5_routing_mi_analyzer.py
