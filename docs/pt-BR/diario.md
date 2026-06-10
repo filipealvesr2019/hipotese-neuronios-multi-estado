@@ -513,3 +513,275 @@ Entropia atrapalha?
 ```
 
 Pelos dados que você já coletou no MNIST, minha aposta é que a segunda opção está mais próxima da realidade.
+
+
+
+
+
+PS F:\neuronios quanticos> python experimentos/v4_3_residual.py
+=== V4.3 Residual Test ===
+
+=== Seed 0 ===
+V4.3 Residual acc (forward only): 0.5200
+
+=== Seed 1 ===
+V4.3 Residual acc (forward only): 0.7425
+
+=== Seed 2 ===
+V4.3 Residual acc (forward only): 0.2025
+
+=== Seed 3 ===
+V4.3 Residual acc (forward only): 0.7200
+
+=== Seed 4 ===
+V4.3 Residual acc (forward only): 0.0400
+
+=== Seed 5 ===
+V4.3 Residual acc (forward only): 0.0925
+
+=== Seed 6 ===
+V4.3 Residual acc (forward only): 0.8125
+
+=== Seed 7 ===
+V4.3 Residual acc (forward only): 0.3750
+
+=== Seed 8 ===
+V4.3 Residual acc (forward only): 0.2500
+
+=== Seed 9 ===
+V4.3 Residual acc (forward only): 0.2650
+
+Resultados salvos em F:\neuronios quanticos\resultados_finais\v4_3_residual_results.json
+PS F:\neuronios quanticos> 
+
+Esse resultado significa algo importante:
+
+**O V4.3 não está aprendendo.**
+
+Veja o código que você executou:
+
+```python
+for ep in range(50):
+    ...
+    _ = model.forward(Xb)
+```
+
+Não existe:
+
+```python
+backward(...)
+```
+
+Nem:
+
+```python
+W -= lr * grad
+```
+
+Ou seja:
+
+```text
+0 épocas de treinamento real
+```
+
+Você está apenas medindo a qualidade dos pesos aleatórios da inicialização.
+
+Por isso aparecem coisas absurdas como:
+
+| Seed | Acc    |
+| ---- | ------ |
+| 6    | 81.25% |
+| 4    | 4.00%  |
+| 5    | 9.25%  |
+
+Nenhuma rede treinada produz esse comportamento.
+
+Isso é apenas sorte da inicialização.
+
+---
+
+### O que o resultado realmente diz
+
+Calculando aproximadamente:
+
+```text
+Média ≈ 40%
+```
+
+Muito abaixo do baseline:
+
+```text
+MLP ≈ 85~95%
+```
+
+Portanto:
+
+```text
+V4.3 Residual não foi testado ainda.
+```
+
+Foi apenas inicializado.
+
+---
+
+### O problema maior
+
+Todos os experimentos recentes:
+
+```text
+v4_2_stability
+v4_stable
+e4_entropy_accuracy
+v4_3_residual
+```
+
+foram versões simplificadas que não possuem backpropagation completo.
+
+Então os resultados:
+
+```text
+10%
+50%
+80%
+```
+
+não significam quase nada para avaliar a arquitetura.
+
+---
+
+### O que você deveria fazer agora
+
+Voltar para a última arquitetura que realmente treinava:
+
+```text
+V4 Sparse Routing original
+```
+
+Aquela que produziu:
+
+```text
+94~95% MNIST
+```
+
+e então adicionar somente:
+
+### Etapa 1
+
+```text
+V4.3 Residual
+```
+
+sobre ela.
+
+Ou seja:
+
+```text
+V4 original
++
+skip connection residual
+```
+
+sem mudar mais nada.
+
+---
+
+### O que eu vejo nos seus relatórios
+
+O principal problema não é FLOPs.
+
+É:
+
+```text
+colapso do gate
+```
+
+Você já mostrou:
+
+```text
+Seed 1:
+95.23%
+L2 entropy = 0.011
+
+Seed 5:
+93.97%
+L2 entropy = 0.869
+```
+
+Ou seja:
+
+```text
+Mais entropia
+≠
+Mais accuracy
+```
+
+Na verdade aconteceu o contrário.
+
+---
+
+### Minha leitura dos dados
+
+Seu V4 parece funcionar melhor quando:
+
+```text
+2 estados
+Top-1
+Gate pequeno
+Colapso parcial
+```
+
+e pior quando:
+
+```text
+4+
+8+
+16+
+Estados
+```
+
+Isso sugere que o problema pode ser:
+
+```text
+excesso de especialistas
+```
+
+e não falta deles.
+
+---
+
+### Próximo experimento que eu faria
+
+Não V4.5.
+
+Não V4.4.
+
+Primeiro:
+
+```text
+V4.3 Residual REAL
+```
+
+sobre o V4 que já fazia:
+
+```text
+95%
+250k FLOPs
+```
+
+e medir:
+
+```text
+Accuracy
+Entropy
+Acc/MFLOP
+```
+
+Porque hoje você ainda não sabe se:
+
+```text
+skip connection
+```
+
+ajuda ou atrapalha.
+
+Esse é o experimento com maior chance de aumentar a accuracy sem aumentar muito os FLOPs.
