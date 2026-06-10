@@ -1263,3 +1263,42 @@ Isso vai te dizer finalmente:
 > se seus “neurônios multiestado” estão aprendendo algo estrutural ou só redistribuindo ruído.
 
 Só fala.
+
+
+
+PS F:\neuronios quanticos> python experimentos\V4_5_routing_mi_analyzer.py
+
+=== Seed 0 ===
+F:\neuronios quanticos\experimentos\V4_5_routing_mi_analyzer.py:137: RuntimeWarning: invalid value encountered in log
+  return -np.mean(np.log(probs[np.arange(B), y] + 1e-9))
+Acc=0.1270 | Entropy=0.6931
+
+=== Seed 1 ===
+Acc=0.1325 | Entropy=0.6931
+
+=== Seed 2 ===
+Acc=0.1280 | Entropy=0.6931
+
+=== Seed 3 ===
+Acc=0.1235 | Entropy=0.6931
+
+=== Seed 4 ===
+Acc=0.1255 | Entropy=0.6931
+
+=== Seed 5 ===
+Acc=0.1205 | Entropy=0.6931
+
+=== Seed 6 ===
+Acc=0.1155 | Entropy=0.6931
+
+=== Seed 7 ===
+Acc=0.1225 | Entropy=0.6931
+
+=== Seed 8 ===
+Acc=0.1040 | Entropy=0.6931
+
+=== Seed 9 ===
+Acc=0.1335 | Entropy=0.6931
+
+Saved.
+PS F:\neuronios quanticos> 
