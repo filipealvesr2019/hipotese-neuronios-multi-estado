@@ -56,4 +56,6 @@ The project transitioned from experimental phase and proved 3 Laws of MoE:
 2. **Law of Secondary Experts:** The Router dictates the division; the networks merely follow.
 3. **Law of Boundary Specialization:** Empirically validated by a high Gini Index and falling ERI in the **CIFAR-10** (PyTorch) benchmark.
 
+**Final Proof (V6.5 - Experts as Structural Memory):** In a final extreme hypothesis test, the Router was restricted to an absolute Top-K of 1 (only 1 expert processes the final calculation at a time). By scaling the inactive experts from 10 to 160, the overall accuracy of the model did not stagnate; it shattered its own performance ceiling. This categorically proves that unprocessed experts are not useless redundancy, but function as **passive/structural memory banks**. Their purely topological existence allows the router to create hyper-specific sub-regions to slice the space, consolidating Sparse MoE systems as a deep Memory Indexing mechanism (*Retrieval System*), aligned with the state-of-the-art of Big Tech architectures.
+
 **Absolute Next Step:** Mathematical formalization of the *Router Partition Theory* in LaTeX for consolidation as an Academic Paper.

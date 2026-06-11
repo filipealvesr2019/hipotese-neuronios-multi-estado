@@ -83,4 +83,6 @@ O projeto saiu da fase experimental e provou 3 Leis do MoE:
 2. **Lei dos Especialistas Secundários:** O Roteador é quem dita a divisão, as redes apenas seguem.
 3. **Lei da Especialização de Fronteira:** Validado empíricamente pelo Gini Index elevado e ERI caindo no benchmark do **CIFAR-10** (PyTorch).
 
+**Prova Final (V6.5 - Experts como Memória Estrutural):** Em um último teste de hipótese extrema, o Roteador foi forçado a usar um Top-K absoluto de 1 (apenas 1 expert processa o cálculo final por vez). Escalando os experts inativos de 10 para 160, a acurácia global do modelo não estagnou; ela quebrou o próprio teto de performance. Isso prova categoricamente que os experts não processados não são redundância inútil, mas funcionam como **bancos de memória passiva/estrutural**. A sua existência puramente topológica permite ao roteador criar sub-regiões hiperespecíficas para fatiar o espaço, consolidando os sistemas Sparse MoE como um mecanismo profundo de Indexação de Memória (*Retrieval System*), alinhado com o estado da arte das Big Techs.
+
 **Próximo Passo Absoluto:** Formalização Matemática em LaTeX da *Router Partition Theory* para consolidação como Paper Acadêmico.
