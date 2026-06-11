@@ -353,25 +353,25 @@ O Router é o fator dominante.
 
 ---
 
-## 7. Experts como Memória Estrutural (Hipótese Validada no V6.5)
+## 7. Experts como Memória Estrutural (Hipótese Suportada no V6.5)
 
-Uma hipótese originalmente teórica que se provou empiricamente verdadeira no experimento `V6.5` (Sweet Spot Memory):
+Uma hipótese originalmente teórica que encontrou forte suporte empírico no experimento `V6.5` (Sweet Spot Memory):
 
 ```text
 Top-1 Expert → Computação ativa
 Demais Experts → Memória passiva estrutural
 ```
 
-Ao fixar o processamento em apenas **1 expert por inferência (Top-K=1)** e escalar a quantidade total de experts disponíveis de 10 para 160, a acurácia do modelo **quebrou o próprio teto de performance**. 
+Ao fixar o processamento em apenas **1 expert por inferência (Top-K=1)** e escalar a quantidade total de experts disponíveis de 10 para 160, a acurácia do modelo não estagnou; ela subiu (de 40.17% para 41.17%). 
 
-Isso provou de forma contundente que os experts não ativados não são "peso morto". Eles fornecem **espaço topológico estrutural** para o Roteador particionar a manifold em centenas de micro-regiões hiperespecíficas, agindo como um banco de dados de alta capacidade (um verdadeiro *Retrieval System*).
+Embora isso não seja uma prova definitiva, é uma forte evidência de que os experts inativos não são apenas redundância. A existência deles fornece **espaço topológico estrutural** para o Roteador criar partições mais eficientes da manifold.
 
-Benefícios confirmados dessa abordagem:
-* **Zero aumento de FLOPs na inferência** (apenas 1 rede minúscula processa o cálculo).
-* **Escala de inteligência virtualmente ilimitada** (adicionar experts expande o dicionário de memória sem sobrecarregar a computação ativa).
-* **Zero competição destrutiva** entre experts.
+Aplicações potenciais dessa direção:
+* **Zero aumento de FLOPs na inferência** (apenas 1 rede processa o cálculo).
+* **Escala de capacidade estrutural** sem sobrecarregar a computação ativa.
+* Transformação do MoE em um sistema focado em Indexação e *Retrieval*.
 
-Esta descoberta alinha a arquitetura deste projeto com a fronteira do estado da arte em IA corporativa escalável.
+Esta direção permanece como uma das mais promissoras para expandir arquiteturas corporativas.
 
 ---
 

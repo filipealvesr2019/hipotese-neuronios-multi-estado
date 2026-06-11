@@ -27,21 +27,37 @@ A premissa é que, ao desenhar uma interface de usuário (UI) a partir de uma im
 
 **(Ambos devem possuir FLOPs totais equivalentes e utilizar o mesmo roteamento Top-K)**.
 
-## O Dataset
-A transição exigirá a construção de pipelines para datasets multimodais públicos (ex: WebSight, Pix2Code, ou scrapings controlados de Tailwind/React). O input é uma imagem (Screenshot) e o target é a sequência de tokens estruturados (HTML/React).
+## O Plano de Ação em Fases
+
+Começaremos deliberadamente pequenos. Tentar reproduzir frameworks de linguagem gigantes logo de cara diluiria a análise estrutural.
+
+### Fase 1: Imagem → HTML Básico
+* Foco em componentes minúsculos: botão, input, card, navbar. (5 a 10 componentes).
+* Testar se a heterogeneidade já mostra sinais de particionamento nas tags base.
+
+### Fase 2: Imagem → HTML + CSS
+* Adição de complexidade visual.
+* Observar se experts menores começam a assumir responsabilidade por cores/estilos e experts maiores pelo layout.
+
+### Fase 3: Imagem → React
+* Transição de marcação estrutural para lógica baseada em componentes.
+* Métricas de compilação tornam-se críticas aqui.
+
+### Fase 4: Imagem → Next.js + Tailwind
+* Ambiente de produção real.
+* O teste definitivo de se o MoE Heterogêneo consegue superar um Homogêneo no design de dashboards ou e-commerces completos.
 
 ## As Novas Métricas de Avaliação
-Loss não é mais suficiente. A validação será feita através de:
+Loss não é mais suficiente. A validação do experimento "Homogêneo vs Heterogêneo" será feita cruzando os seguintes dados:
 1. **Similaridade Visual:** Renderização do output vs Screenshot original.
 2. **Similaridade Estrutural:** AST do DOM HTML (ex: `<section>` vs `<div>`).
-3. **Taxa de Compilação:** O código sintático quebra ou passa no build (ex: sintaxe React/Vue válida).
-4. **Métricas de Dinâmica de Roteamento (As métricas originais do lab):**
+3. **Taxa de Compilação:** O código sintático roda no terminal (`npm build` passa)?
+4. **Métricas de Dinâmica de Roteamento:**
     * Gini Index
     * Expert Redundancy Index (ERI)
     * Routing Stability (RS)
-    * **Mapeamento Semântico de Ativação:** Qual expert foi ativado ao gerar um token de cor vs um token de hierarquia de tag.
+    * **Mapeamento Semântico de Ativação:** Qual expert foi ativado ao gerar a cor vs o componente estrutural?
 
 ## O Grande Objetivo
-Construir dois legados simultâneos:
-1. Um produto real de engenharia: um gerador de código visual state-of-the-art baseado em arquitetura esparsa.
-2. Evidência empírica incontestável sobre como a especialização brota a partir da heterogeneidade física de um sistema de rede neural.
+A era "V1–V6" será catalogada como **Pesquisa arquitetural e descoberta de hipóteses**.
+A Fase V8 inicia o capítulo de **Validação prática da arquitetura em geração de código a partir de interfaces**. Transformamos a arquitetura de um simples objeto de estudo acadêmico em uma ferramenta utilitária e pragmática de engenharia.

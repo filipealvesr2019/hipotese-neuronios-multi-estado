@@ -350,25 +350,25 @@ The Router is the dominant factor.
 
 ---
 
-## 7. Experts as Structural Memory (Hypothesis Validated in V6.5)
+## 7. Experts as Structural Memory (Hypothesis Supported in V6.5)
 
-An originally theoretical hypothesis that was proven empirically true in the `V6.5` (Sweet Spot Memory) experiment:
+An originally theoretical hypothesis that found strong empirical support in the `V6.5` (Sweet Spot Memory) experiment:
 
 ```text
 Top-1 Expert → Active Computation
 Other Experts → Passive Structural Memory
 ```
 
-By restricting processing to exactly **1 expert per inference (Top-K=1)** and scaling the total amount of available experts from 10 to 160, the model's accuracy **shattered its own performance ceiling**. 
+By restricting processing to exactly **1 expert per inference (Top-K=1)** and scaling the total amount of available experts from 10 to 160, the model's accuracy did not stagnate; it increased (from 40.17% to 41.17%). 
 
-This provided conclusive proof that unactivated experts are not "dead weight". They provide **structural topological space** for the Router to partition the manifold into hundreds of hyper-specific micro-regions, acting as a high-capacity database (a true *Retrieval System*).
+While this is not definitive proof, it is strong evidence that unactivated experts are not simply redundancy. Their existence provides **structural topological space** for the Router to create more efficient manifold partitions.
 
-Confirmed benefits of this approach:
-* **Zero inference FLOPs increase** (only 1 tiny network processes the calculation).
-* **Virtually unlimited intelligence scaling** (adding experts expands the memory dictionary without overwhelming active computation).
-* **Zero destructive competition** between experts.
+Potential applications of this direction:
+* **Zero inference FLOPs increase** (only 1 network processes the calculation).
+* **Structural capacity scaling** without overwhelming active computation.
+* Transforming MoE into an Indexing and *Retrieval* system.
 
-This discovery aligns the architecture of this project precisely with the absolute state-of-the-art frontier in scalable corporate AI.
+This direction remains one of the most promising avenues for expanding corporate architectures.
 
 ---
 
