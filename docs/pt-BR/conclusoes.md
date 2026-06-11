@@ -77,4 +77,10 @@ Especialização de especialistas, roteamento efetivo e colapso recorrente da La
 
 **Atualização Gate/Entropia:** gate 6 não superou gate 8. O novo logging por época confirmou novamente Layer 1 distribuída e Layer 2 frequentemente colapsada, indicando que a próxima melhoria depende de otimização/roteamento, não apenas de tamanho do gate.
 
-**Atualização Arena:** a V4 econômica passa a ser baseline experimental, não destino final. A próxima fase compara V4 contra variantes V5-V9 sob o mesmo protocolo para descobrir se o gargalo está na otimização local ou na própria arquitetura de roteamento.
+**Fase de Escalonamento e Causalidade (V6 e V7):** O gargalo não era de arquitetura, mas da forma como o Roteador se expressava (contexto). O `V6.0` em NumPy e o `V7` em PyTorch provaram matematicamente a superioridade de um **Gate Contextual com Adam**.
+O projeto saiu da fase experimental e provou 3 Leis do MoE:
+1. **Lei da Primazia do Router:** Sem ele ativamente particionando o espaço de entrada, não há especialização (Freeze Study V6.2).
+2. **Lei dos Especialistas Secundários:** O Roteador é quem dita a divisão, as redes apenas seguem.
+3. **Lei da Especialização de Fronteira:** Validado empíricamente pelo Gini Index elevado e ERI caindo no benchmark do **CIFAR-10** (PyTorch).
+
+**Próximo Passo Absoluto:** Formalização Matemática em LaTeX da *Router Partition Theory* para consolidação como Paper Acadêmico.

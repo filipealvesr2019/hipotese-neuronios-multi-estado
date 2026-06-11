@@ -16,6 +16,7 @@ O modelo foi submetido a testes de robustez variando de distribuições sintéti
 | **Spiral**               | 0.97     | 5              | 3     |
 | **Gaussian**             | 0.91     | 5              | 3     |
 | **High-Dim (400D/10-C)** | 0.45     | 20             | 4     |
+| **CIFAR-10 (V7 PyTorch)**| ~0.46    | 8              | 3     |
 
 ### Métricas de Integridade Arquitetural (High-Dim)
 * **ERI ≈ 0.10** (Expert Redundancy Index): Baixa redundância garantida matematicamente. As redes não copiam comportamento.

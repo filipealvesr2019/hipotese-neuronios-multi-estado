@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 datasets/mnist/*.gz
 /workspace_test
+/data

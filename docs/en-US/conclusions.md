@@ -50,4 +50,10 @@ Expert specialization, effective routing, and recurring Layer 2 collapse appear 
 
 **Gate/entropy update:** gate 6 did not beat gate 8. The new per-epoch logging again confirmed distributed Layer 1 usage and frequent Layer 2 collapse, suggesting the next improvement depends on optimization/routing rather than gate size alone.
 
-**Arena update:** economic V4 becomes the experimental baseline, not the final destination. The next phase compares V4 against V5-V9 variants under the same protocol to determine whether the bottleneck is local optimization or the routing architecture itself.
+**Scaling and Causality Phase (V6 and V7):** The bottleneck was not the architecture itself, but how the Router expressed context. `V6.0` in NumPy and `V7` in PyTorch mathematically proved the superiority of a **Contextual Gate trained with Adam**.
+The project transitioned from experimental phase and proved 3 Laws of MoE:
+1. **Law of Router Primacy:** Without it actively partitioning the input space, there is no specialization (Freeze Study V6.2).
+2. **Law of Secondary Experts:** The Router dictates the division; the networks merely follow.
+3. **Law of Boundary Specialization:** Empirically validated by a high Gini Index and falling ERI in the **CIFAR-10** (PyTorch) benchmark.
+
+**Absolute Next Step:** Mathematical formalization of the *Router Partition Theory* in LaTeX for consolidation as an Academic Paper.

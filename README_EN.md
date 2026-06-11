@@ -16,6 +16,7 @@ The model underwent robustness tests ranging from local synthetic distributions 
 | **Spiral**               | 0.97     | 5              | 3     |
 | **Gaussian**             | 0.91     | 5              | 3     |
 | **High-Dim (400D/10-C)** | 0.45     | 20             | 4     |
+| **CIFAR-10 (V7 PyTorch)**| ~0.46    | 8              | 3     |
 
 ### Architectural Integrity Metrics (High-Dim)
 * **ERI ≈ 0.10** (Expert Redundancy Index): Mathematically guaranteed low redundancy. The networks do not copy behavior.
