@@ -99,9 +99,9 @@ def collate_fn(batch, pad_idx):
     return images, padded_seqs
 
 def main():
-    print("Iniciando V8_4: Treinamento e Extração de Gate Probs (Word-Level)...")
+    print("Iniciando V8_6: O Teste Cruel (Treinamento Multimodal no Dataset Misto)...")
     
-    data_dir = "dataset_headers"
+    data_dir = "dataset_mixed"
     meta_files = glob.glob(os.path.join(data_dir, "metadata", "*.json"))
     if not meta_files:
         print("Erro: Nenhum header encontrado. Rode V8_3_HeaderDataset.py primeiro.")
@@ -186,12 +186,13 @@ def main():
     tokens_to_plot = []
     matrix_to_plot = []
     
-    # Dicionários para contagem estatística sugerida
+    # Dicionários para contagem estatística atualizados para o Teste Cruel
     token_categories = {
-        "HTML_ESTRUTURAL": ["<header>", "</header>", "<h1>", "</h1>", "<nav>", "</nav>", "<span>", "</span>", "<button>", "</button>"],
-        "CSS_LAYOUT": ["width:", "box-sizing:", "display:", "justify-content:", "align-items:", "padding:", "margin:"],
-        "CSS_VISUAL": ["background-color:", "color:", "font-family:", "border-radius:", "border:", "cursor:", "font-weight:", "style="],
-        "CONTEUDO_TEXTO": ["Logo", "Brand", "MySite", "App", "Home", "About", "Services", "Contact", "Dashboard", "Login", "Sign", "Enter", "&nbsp;"]
+        "HTML_ESTRUTURAL": ["<header>", "</header>", "<h1>", "</h1>", "<nav>", "</nav>", "<span>", "</span>", "<button>", "</button>", "<div>", "</div>", "<img>", "<form>", "</form>", "<input>", "<p>", "</p>", "<footer>", "</footer>", "<h3>", "</h3>"],
+        "CSS_LAYOUT": ["width:", "box-sizing:", "display:", "justify-content:", "align-items:", "padding:", "margin:", "flex-direction:", "overflow:"],
+        "CSS_VISUAL": ["background-color:", "color:", "font-family:", "border-radius:", "border:", "cursor:", "font-weight:", "style=", "box-shadow:"],
+        "ATRIBUTOS_DIVERSOS": ["type=", "placeholder=", "src=", "alt="],
+        "CONTEUDO_TEXTO": ["Logo", "Brand", "MySite", "App", "Home", "About", "Services", "Contact", "Dashboard", "Login", "Sign", "Enter", "Welcome", "Profile", "Product", "Details", "Read", "More", "Submit", "Link", "Privacy", "Terms", "Inc.", "&nbsp;"]
     }
     
     expert_category_dominance = {i: {cat: 0.0 for cat in token_categories.keys()} for i in range(5)}
@@ -241,10 +242,10 @@ def main():
     plt.xlabel("Experts (Tamanhos Crescentes)")
     plt.ylabel("Tokens Funcionais")
     plt.tight_layout()
-    plt.savefig('graficos/expert_heatmap_v8.png')
+    plt.savefig('graficos/expert_heatmap_v8_mixed.png')
     plt.close()
     
-    print("\n[Artefato Crítico Gerado] Heatmap salvo em: graficos/expert_heatmap_v8.png")
+    print("\n[Artefato Crítico Gerado] Heatmap salvo em: graficos/expert_heatmap_v8_mixed.png")
 
 if __name__ == "__main__":
     main()

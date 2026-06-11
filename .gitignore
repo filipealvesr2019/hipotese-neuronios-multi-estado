@@ -5,3 +5,4 @@ datasets/mnist/*.gz
 /data
 /dataset
 /dataset_headers
+/dataset_mixed
