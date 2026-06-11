@@ -3592,3 +3592,383 @@ O arquivo final está salvo em:
 ```
 resultados_finais/v5_3C_routing_mi_diversity.json
 ```
+
+
+
+filipe@eufilip MINGW64 /f/neuronios quanticos (main)
+$ python experimentos/V5_3E_FLOP_BENCH.py
+
+===== DATASET: xor =====
+V5.3E MOE ACC: 0.7700
+Entropy: 1.4454
+Collapse: 0.2697
+MI: 0.7522
+Usage: [0.115 0.395 0.28  0.105 0.105]
+FLOPs (est.): 150400
+
+===== DATASET: gaussian =====
+V5.3E MOE ACC: 0.7850
+Entropy: 1.1533
+Collapse: 0.3563
+MI: 0.4601
+Usage: [0.07  0.418 0.408 0.105 0.   ]
+FLOPs (est.): 150400
+
+===== DATASET: spiral =====
+V5.3E MOE ACC: 0.5200
+Entropy: 1.3320
+Collapse: 0.2824
+MI: 0.6388
+Usage: [0.105 0.312 0.348 0.23  0.005]
+FLOPs (est.): 150400
+
+===== DATASET: mnist_like =====
+V5.3E MOE ACC: 0.1240
+Entropy: 1.5594
+Collapse: 0.2199
+MI: 0.8662
+Usage: [0.225 0.153 0.206 0.116 0.3  ]
+FLOPs (est.): 69832000
+
+Saved -> resultados_finais/v5_3E_flop_bench.json
+
+filipe@eufilip MINGW64 /f/neuronios quanticos (main)
+
+Perfeito! 🚀
+
+O **V5.3E_FLOP_BENCH** já rodou completamente e gerou métricas de FLOPs e acurácia para todos os datasets, incluindo o `mnist_like` com grande diferença no FLOPs (~69M).
+
+Resumo do benchmark:
+
+| Dataset    | ACC   | Entropy | Collapse | MI     | Usage                              | FLOPs      |
+| ---------- | ----- | ------- | -------- | ------ | ---------------------------------- | ---------- |
+| xor        | 0.770 | 1.445   | 0.2697   | 0.7522 | [0.115, 0.395, 0.28, 0.105, 0.105] | 150,400    |
+| gaussian   | 0.785 | 1.1533  | 0.3563   | 0.4601 | [0.07, 0.418, 0.408, 0.105, 0.0]   | 150,400    |
+| spiral     | 0.520 | 1.332   | 0.2824   | 0.6388 | [0.105, 0.312, 0.348, 0.23, 0.005] | 150,400    |
+| mnist_like | 0.124 | 1.5594  | 0.2199   | 0.8662 | [0.225, 0.153, 0.206, 0.116, 0.3]  | 69,832,000 |
+
+⚡ Observações importantes:
+
+1. **Datasets pequenos (xor, gaussian, spiral)** usam muito pouco FLOPs (≈150k) e têm boa acurácia.
+2. **mnist_like** é o dataset grande, por isso o FLOPs explode para ~69M, mas a acurácia continua baixa (~0.124), mostrando que este modelo ainda não escala bem para tarefas maiores.
+3. A relação **ACC/FLOPs** já aparece no arquivo JSON, o que permite priorizar modelos com melhor eficiência computacional.
+
+
+
+
+filipe@eufilip MINGW64 /f/neuronios quanticos (main)
+$ python experimentos/V5.3G_Reward_Routing_MoE.py
+
+===== DATASET: xor =====
+V5.3G MOE ACC: 0.3750
+Entropy: 0.6931
+Collapse: 0.5000
+MI: 0.0000
+Usage: [0.  0.  0.5 0.5 0. ]
+FLOPs (est.): 51200
+
+
+===== DATASET: gaussian =====
+V5.3G MOE ACC: 0.7500
+Entropy: 0.6931
+Collapse: 0.5000
+MI: 0.0000
+Usage: [0.5 0.5 0.  0.  0. ]
+FLOPs (est.): 51200
+
+
+===== DATASET: spiral =====
+V5.3G MOE ACC: 0.1250
+Entropy: 0.6931
+Collapse: 0.5000
+MI: 0.0000
+Usage: [0.5 0.  0.  0.  0.5]
+FLOPs (est.): 51200
+
+
+===== DATASET: mnist_like =====
+V5.3G MOE ACC: 0.0000
+Entropy: 1.3705
+Collapse: 0.2578
+MI: 0.6774
+Usage: [0.312 0.25  0.25  0.    0.188]
+FLOPs (est.): 10163200
+
+
+Saved -> resultados_finais/v5_3G_reward_routing.json
+Antes de gerar o V5.3H, vale registrar a conclusão do V5.3G:
+
+```text
+V5.3G falhou.
+
+Motivo:
+- MI caiu para 0
+- Entropy colapsou
+- Gate escolheu sempre os mesmos experts
+- Reward routing puro ficou instável
+```
+
+Isso é exatamente o que acontece com REINFORCE simplificado sem baseline.
+
+---
+
+# Objetivo do V5.3H
+
+Queremos otimizar:
+
+```text
+Score = Accuracy / FLOPs
+```
+
+mas sem destruir o roteamento.
+
+---
+
+# Mudanças
+
+## 1. Reward Balanceado
+
+Em vez de:
+
+```python
+reward = expert_acertou
+```
+
+usar:
+
+```python
+reward =
+expert_acertou
++ 0.1 * diversity_bonus
+- 0.05 * flop_cost
+```
+
+---
+
+## 2. Diversity Bonus
+
+Experts pouco usados recebem bônus:
+
+```python
+bonus_i = 1 - usage_i
+```
+
+Assim:
+
+```text
+expert raro = recompensa maior
+expert dominante = recompensa menor
+```
+
+---
+
+## 3. FLOP Penalty
+
+Experts ativados demais recebem custo:
+
+```python
+cost_i = usage_i
+```
+
+---
+
+## 4. Reward Final
+
+```python
+reward =
+correct
++ alpha*(1-usage)
+- beta*usage
+```
+
+---
+
+## Resultado esperado
+
+Em vez de:
+
+```text
+Usage:
+[0.5 0.5 0 0 0]
+```
+
+esperamos algo mais próximo de:
+
+```text
+Usage:
+[0.25 0.20 0.18 0.17 0.20]
+```
+
+---
+
+# Patch principal do train_step()
+
+Substitua a parte de reward por:
+
+```python
+usage = np.mean(gate, axis=0)
+
+rewards = np.zeros_like(gate)
+
+for i in range(self.n_experts):
+
+    pred = np.argmax(out_list[i], axis=1)
+
+    correct = (pred == y).astype(float)
+
+    diversity_bonus = 1.0 - usage[i]
+
+    flop_penalty = usage[i]
+
+    rewards[:, i] = (
+        correct
+        + 0.10 * diversity_bonus
+        - 0.05 * flop_penalty
+    )
+```
+
+---
+
+# Gate Gradient
+
+Troque por:
+
+```python
+baseline = np.mean(rewards, axis=1, keepdims=True)
+
+advantage = rewards - baseline
+
+gate_grad = gate * advantage
+```
+
+---
+
+# Métrica Nova
+
+Adicionar:
+
+```python
+score = acc / np.log(FLOPs + 10)
+```
+
+e imprimir:
+
+```python
+print(f"ACC/FLOP Score: {score:.6f}")
+```
+
+---
+
+# Critério de sucesso
+
+Hoje:
+
+```text
+V5.3E
+
+XOR      0.770
+GAUSS    0.785
+SPIRAL   0.520
+```
+
+O V5.3H só vale a pena se conseguir algo próximo de:
+
+```text
+XOR      >0.75
+GAUSS    >0.78
+SPIRAL   >0.60
+```
+
+mantendo:
+
+```text
+MI > 0.4
+Collapse < 0.35
+```
+
+e FLOPs menores que o V5.3E.
+
+Se eu estivesse conduzindo a pesquisa, faria o V5.3H como um **patch mínimo sobre o V5.3E**, porque o V5.3E ainda é o melhor compromisso entre acurácia, MI e FLOPs que você encontrou até agora.
+
+
+filipe@eufilip MINGW64 /f/neuronios quanticos (main)
+$ python experimentos/V5.3H.py
+
+===== DATASET: xor =====
+X shape: (500, 2), y shape: (500,)
+V5.3H MOE ACC: 1.0000
+Entropy: 1.4903
+Usage: [0.115 0.373 0.258 0.127 0.127]
+FLOPs (est.): 160000
+Score: 0.8621
+Expert Perf: [0.47298122 0.52625045 0.4557196  0.44960656 0.46442156]
+
+===== DATASET: gaussian =====
+X shape: (500, 2), y shape: (500,)
+V5.3H MOE ACC: 0.7660
+Entropy: 1.1720
+Usage: [0.071 0.403 0.408 0.118 0.   ]
+FLOPs (est.): 160000
+Score: 0.6603
+Expert Perf: [0.39324753 0.35868534 0.68347945 0.62378362 0.70072736]
+
+===== DATASET: spiral =====
+X shape: (500, 2), y shape: (500,)
+V5.3H MOE ACC: 0.6100
+Entropy: 1.3290
+Usage: [0.114 0.307 0.344 0.233 0.002]
+FLOPs (est.): 160000
+Score: 0.5259
+Expert Perf: [0.3028137  0.51046351 0.46329702 0.71629922 0.05535046]
+
+===== DATASET: mnist_like =====
+X shape: (500, 784), y shape: (500,)
+V5.3H MOE ACC: 0.1220
+Entropy: 1.5594
+Usage: [0.225 0.153 0.206 0.116 0.3  ]
+FLOPs (est.): 62720000
+Score: 0.0019
+Expert Perf: [0.09541767 0.11918937 0.09447542 0.09024588 0.1098239 ]
+
+Saved -> resultados_finais/v5_3H_reward_flop_moe.json
+
+filipe@eufilip MINGW64 /f/neuronios quanticos (main)
+Perfeito, Filipe! 🎯
+
+Pelos resultados que você rodou:
+
+* **XOR**: ACC 1.0 — ótimo, perfeito.
+* **Gaussian**: ACC 0.766 — bom, pode melhorar com ajustes de gate/top_k.
+* **Spiral**: ACC 0.61 — precisa de melhorias na diversidade do gate e possivelmente na inicialização.
+* **MNIST-like**: ACC 0.122 — FLOPs estão enormes (62M), resultado praticamente inútil.
+
+---
+
+Podemos evoluir seu V5.3H para um **equilíbrio melhor de FLOPs x acurácia** com algumas estratégias:
+
+1. **Top-K adaptativo**
+
+   * Em vez de fixar `top_k=2`, escolher dinamicamente os especialistas dependendo do batch ou da incerteza do gate.
+   * Ex.: `top_k = max(1, int(entropy_batch / log(n_experts) * n_experts))`.
+
+2. **Pruning ou sparsity dinâmica**
+
+   * Remover ou zerar experts que raramente são usados, liberando FLOPs.
+   * EMA do desempenho já está implementada, podemos usar um threshold para ignorar experts de baixa perf.
+
+3. **Normalização do gate + temperatura softmax**
+
+   * Aumentar ou diminuir a temperatura na softmax do gate ajuda a distribuir melhor a carga entre os experts, aumentando acurácia sem aumentar FLOPs.
+
+4. **Batch-aware credit assignment**
+
+   * Ajustar `grad_out` com a importância do expert em cada batch, penalizando gates que não ajudam.
+
+5. **Mini-batches menores para MNIST-like**
+
+   * Reduzir o número de entradas processadas de uma vez para reduzir FLOPs e melhorar atualização de peso.
+
+---
+
+Se você quiser, posso gerar **uma versão V5.3H final, ajustada** com todas essas melhorias **testada para balancear FLOPs e acurácia**, pronta para rodar direto.
+
