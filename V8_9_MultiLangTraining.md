@@ -108,3 +108,232 @@ RELATÓRIO ESTATÍSTICO: ESPECIALIZAÇÃO POR LINGUAGEM
 ============================================================
 
 [Artefato Crítico Gerado] Heatmap salvo em: graficos/expert_lang_heatmap.png
+Esse resultado é extremamente interessante porque ele **não confirmou a hipótese que você queria confirmar**.
+
+E isso é bom.
+
+Olha os números:
+
+| Linguagem | Expert dominante      |
+| --------- | --------------------- |
+| HTML      | Expert 2 (64) → 79.6% |
+| React     | Expert 2 (64) → 74.9% |
+| Next.js   | Expert 2 (64) → 66.4% |
+| Tailwind  | Expert 2 (64) → 66.6% |
+
+O que isso sugere?
+
+### Hipótese 1 — Ainda não existe especialização por linguagem
+
+O roteador está dizendo:
+
+> "HTML, React, Next e Tailwind são praticamente a mesma coisa."
+
+E honestamente?
+
+Talvez ele esteja certo.
+
+Porque na prática:
+
+```html
+<div>
+```
+
+React:
+
+```jsx
+<div>
+```
+
+Next:
+
+```tsx
+<div>
+```
+
+Tailwind:
+
+```jsx
+<div className="...">
+```
+
+80% da estrutura continua sendo HTML.
+
+---
+
+### Hipótese 2 — O dataset é semanticamente igual
+
+Você está mostrando para o modelo:
+
+```text
+Header
+Header
+Header
+Header
+```
+
+Só muda a sintaxe.
+
+Mas o conceito visual é exatamente o mesmo.
+
+O roteador pode estar aprendendo:
+
+```text
+Imagem Header
+      ↓
+Expert 2
+      ↓
+gera qualquer linguagem
+```
+
+---
+
+### O que eu acho mais importante
+
+Compare os três experimentos:
+
+#### Experimento 1
+
+```text
+Tokens
+```
+
+Resultado:
+
+```text
+HTML
+CSS
+Texto
+```
+
+pareciam separados.
+
+---
+
+#### Experimento 2
+
+```text
+Famílias
+```
+
+Resultado:
+
+```text
+Form
+Navbar
+Card
+Footer
+```
+
+também apareceram padrões.
+
+---
+
+#### Experimento 3
+
+```text
+Linguagens
+```
+
+Resultado:
+
+```text
+Tudo no Expert 2
+```
+
+---
+
+Isso sugere algo muito interessante:
+
+### Talvez o roteador esteja separando conceitos, não sintaxe
+
+Ou seja:
+
+Ele parece se importar mais com:
+
+```text
+Formulário
+Card
+Navbar
+Header
+```
+
+do que com:
+
+```text
+HTML
+React
+Next
+Tailwind
+```
+
+Se isso continuar aparecendo, seria uma descoberta muito mais legal.
+
+Porque num IDE multiagente você quer justamente isso.
+
+Você não quer:
+
+```text
+Agente React
+Agente Next
+Agente HTML
+```
+
+Você quer:
+
+```text
+Agente Frontend
+Agente Backend
+Agente Banco
+Agente Testes
+Agente DevOps
+```
+
+Separação por função.
+
+Não por linguagem.
+
+---
+
+## O experimento que eu faria agora
+
+Misturar tudo:
+
+```text
+Header HTML
+Header React
+Header Next
+
+Card HTML
+Card React
+Card Next
+
+Form HTML
+Form React
+Form Next
+```
+
+E então medir:
+
+```text
+Expert -> componente
+Expert -> linguagem
+```
+
+ao mesmo tempo.
+
+Se aparecer algo assim:
+
+```text
+Expert 0 -> Forms
+Expert 1 -> Cards
+Expert 2 -> Headers
+Expert 3 -> Navbars
+Expert 4 -> Footers
+```
+
+independente da linguagem usada,
+
+aí você terá uma evidência bem forte de que o roteador está organizando o espaço por **conceito visual/funcional** em vez de por sintaxe.
+
+E, sinceramente, para a visão de longo prazo do seu IDE multiagente, isso seria muito mais valioso do que descobrir que um expert gosta de JSX e outro gosta de Tailwind.
