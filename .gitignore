@@ -4,3 +4,4 @@ datasets/mnist/*.gz
 /workspace_test
 /data
 /dataset
+/dataset_headers
