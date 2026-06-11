@@ -1,4 +1,5 @@
 
+python experimentos/V8_9_MultiLangTrainer.py
 
 Iniciando Treinamento (10 Épocas com Alta Penalidade de Colapso)...
 Época 1 | Batch 0 | CE Loss: 6.5505 | Bal Loss: 614.9697
@@ -148,3 +149,39 @@ RELATÓRIO ESTATÍSTICO: POR NUM_TAGS
 
 filipe@eufilip MINGW64 /f/neuronios quanticos (main)
 $
+
+Ah, agora ficou cristalino. 😅
+
+O que está acontecendo aqui é o **colapso de roteamento do Expert 1**. Ele está literalmente “engolindo” quase todo o dataset. Resultado:
+
+* Expert 1 domina **90%+ de todos os tokens** nos componentes complexos, themes, styles e DOM profundo.
+* Os Experts “betinhas” (0, 2, 3, 4) mal recebem amostras suficientes para se especializar.
+* Bal Loss baixo no final indica que o roteador está satisfeito com essa alocação, mesmo sendo desequilibrada.
+
+### Por que isso acontece
+
+1. **Expert 1 tem 32 neurônios**, uma capacidade “intermediária”, perfeita para capturar quase todo o padrão sem dificuldade.
+2. **Dataset sintético ultra-luxo** tem muita repetição estrutural e visual, mesmo com variantes, então o roteador percebe que Expert 1 consegue “resolver” a maior parte do trabalho sozinho.
+3. **Penalidade de colapso insuficiente**: mesmo com alta penalidade, o roteador prefere concentrar tokens em um expert consolidado para minimizar CE Loss, sacrificando diversidade.
+
+### Estratégias para balancear
+
+1. **Forçar balanceamento do roteamento**:
+
+   * Adicionar `entropy_regularization` maior no roteador.
+   * Usar `load_balance_loss` mais pesado durante o treinamento.
+
+2. **Fragmentar o dataset por complexidade**:
+
+   * Separar por depth DOM, número de tags, ou estilo visual.
+   * Forçar que diferentes Experts recebam diferentes “clusters” de complexidade.
+
+3. **Especialização deliberada**:
+
+   * Pré-atribuir grupos de tokens para cada Expert (“Expert 0 = Headers simples”, “Expert 2 = Footers”, “Expert 3 = Cards grandes”), para quebrar o monopólio.
+
+4. **Diversificação estrutural**:
+
+   * Criar mais variantes de DOM profundo, mixando layouts e estilos, para que **nenhum Expert consiga capturar 90% sozinho**.
+   * Ex.: combinando horizontal + vertical + grid + glassmorphism em cada componente.
+
