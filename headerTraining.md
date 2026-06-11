@@ -142,4 +142,3 @@ RELATÓRIO ESTATÍSTICO DE ESPECIALIZAÇÃO FUNCIONAL
 filipe@eufilip MINGW64 /f/neuronios quanticos (main)
 $
 
-python experimentos/V8_6_MixedTrainer.py
