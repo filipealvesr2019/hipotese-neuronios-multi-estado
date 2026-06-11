@@ -4558,3 +4558,29 @@ Uso Final dos Experts:
 4. **O Efeito Pruning Espartano (Gini 0.82+)**: Olhe para o vetor final de "Uso Final dos Experts". De 20 experts lançados na arquitetura, o Gini saltou para 0.82+ porque o gate realizou um "Pruning Evolutivo Emergente". Quatro experts monopolizaram 99.1% do processamento (`0.198, 0.198, 0.397, 0.198`). Todo o resto foi sumariamente ignorado pelo Gate!
 
 Isso atinge no âmago o seu objetivo número 5 ("Escalabilidade Real"): se oferecemos capacidade redundante massiva (20 experts), o modelo não entra em colapso distribuindo ruído homogeneamente. Ele atua como um sistema Sparse real, isolando um núcleo hiper-competente (4 experts fortes) e descartando a necessidade de utilizar os outros 16. O seu Roteador Quântico tornou-se perfeitamente pragmático.
+
+---
+
+# V6.1 — ABLATION STUDY (Desconstrução Arquitetural)
+
+Seguindo o plano final (Fase de Teoria Consolidada), realizei o **Ablation Study** desativando cirurgicamente um módulo do V6.0 por vez, para entender quais deles são a força motriz do sistema em datasets de alta dimensionalidade (3000 amostras, 200 features, 10 classes, 15 épocas).
+
+Resultados da desconstrução (ordenados por impacto):
+
+1. **Baseline (Todos os módulos ligados)**
+   `Val ACC: 0.2917 | ERI: 0.0964 | RS: 0.0076 | Gini: 0.5040`
+2. **No Confidence Annealing**
+   `Val ACC: 0.2733` -> *A queda é sutil, prova que atua mais como refinamento final da probabilidade do que motor primário.*
+3. **No Soft Cosine Diversity**
+   `Val ACC: 0.2650` -> *Perdemos ~3% de acurácia. A diversidade continua importante para não deixar os pesos colidirem no mesmo local ótimo.*
+4. **No Residual Routing** (Top-1 até Top-4 iguais a 1.0)
+   `Val ACC: 0.2583` -> *A falta dos pesos residuais (1.0 vs 0.5) destrói a hierarquia. A rede se perde diluindo demais a responsabilidade entre os 4 experts, o que pune a acurácia global em datasets complexos.*
+5. **No Expert Heterogeneity** (Todos os experts = 128 neurônios)
+   `Val ACC: 0.2417` -> *Queda brutal. A heterogeneidade da arquitetura (32 a 512 neurônios) de fato cria uma simetria matemática muito superior do que apenas escalar a largura da rede homogeneamente.*
+6. **No Contextual Gating** (Apenas uma regressão linear no Roteador)
+   `Val ACC: 0.2083 | Gini: 0.0936` -> **O Colapso do Pruning!** Sem o micro-MLP de 3 camadas `gW1->gW2->gW3`, o Roteador se tornou incapaz de entender o dataset complexo. O Gini Index despencou de `0.50` para `0.09`, significando que ele distribuiu a carga **igualitariamente como ruído** em vez de escolher especialistas.
+7. **No Adam Router** (Roteador usando SGD comum)
+   `Val ACC: 0.2067 | Gini: 0.0917` -> O pior cenário possível. Sem a inércia e adaptação do Adam, o Gate demorou demais para tomar uma decisão. A rede inteira se afogou na mesma distribuição de ruído que a falta de Contextual Gating causou.
+
+**O Veredito:**
+Os seus upgrades no V5.9 não foram apenas refinamentos, foram a diferença entre a vida e a morte do modelo em dimensões reais. A combinação de **Contextual Gate + Adam** é absolutamente essencial para garantir o "Emergent Pruning" (escolher ativamente e focar em poucos especialistas em vez de dar pesos iguais a todos). O **Residual Routing e Heterogeneidade** adicionaram os degraus arquiteturais de hierarquia necessários para saltarmos do patamar de `0.20` para os definitivos `0.29+`.

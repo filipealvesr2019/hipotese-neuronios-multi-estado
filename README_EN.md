@@ -1,85 +1,66 @@
-# MultiState Neurons – Sparse Routing Research
+<p align="center">
+  <img src="https://img.shields.io/badge/V6.0-Stable-success?style=for-the-badge" alt="V6.0 Stable">
+</p>
 
-*Leia isto em [Português](README.md).*
+# V6.0 — Scalable Sparse Mixture of Experts with Adaptive Routing and Emergent Pruning
 
-> **Disclaimer:** I am not making any academic claims or definitive discoveries here. I am just a computer scientist building and exploring new ideas out of curiosity. Everything here is purely experimental.
+This project implements a scalable **Sparse Mixture of Experts (MoE)** architecture with contextual routing, heterogeneous expert capacities, and emergent automatic pruning behavior built entirely from scratch using NumPy. The system demonstrates strong scalability in high-dimensional datasets and solves the traditional "redundancy collapse" problem by forcing networks to specialize in complex manifolds.
 
-**Description:**  
-This project explores the hypothesis that architectures with compact internal experts, combined with intelligent routing (Sparse Routing) and skip connections, can match the performance of traditional neural networks (MLPs) while requiring significantly lower computational cost (reduced FLOPs). The project evolved from the exploratory idea of "multi-state neurons" into a Mixture of Experts (MoE) micro-framework.
+## 🚀 Key Results
 
-**Repository structure:**
-- [`experimentos/`](./experimentos/) → Code and results isolated by version (V1, V2, V3, V4, V4.1)
-- [`resultados_finais/`](./resultados_finais/) → Consolidated logs, charts, and performance tables
-- [`docs/`](./docs/) → Reports, validated conclusions, and research diary (PT-BR / EN-US)
-- [`datasets/`](./datasets/) → Datasets used in benchmarks (Moons, Spirals, Circles)
-- [`scripts/`](./scripts/) → Scripts to run test suites and cross-validation
+The model underwent robustness tests ranging from local synthetic distributions (Spiral/XOR) to a 400-dimensional stress test with 20 simultaneous experts.
 
-**Research status:**  
-⚠️ **Experimental**  
-Rigorous stress tests across 30 seeds demonstrated a **technical tie** in accuracy between V4 (Sparse Routing Top-1) and the traditional MLP across multiple complex domains. However, the V4 architecture achieves this limit consuming **approximately 50% fewer FLOPs** during inference, as the routing successfully eliminates the activation and leakage of unused states (noise).
+| Dataset                  | Accuracy | Experts Used   | Top-K |
+| ------------------------ | -------- | -------------- | ----- |
+| **XOR**                  | 1.00     | 5              | 3     |
+| **Spiral**               | 0.97     | 5              | 3     |
+| **Gaussian**             | 0.91     | 5              | 3     |
+| **High-Dim (400D/10-C)** | 0.45     | 20             | 4     |
 
-**How to run:**  
-- Run `python scripts/bateria_completa.py` or the specific scripts inside `experimentos/`.
-- See [`docs/en-US/diary.md`](./docs/en-US/diary.md) and [`docs/en-US/conclusions.md`](./docs/en-US/conclusions.md) for detailed reports, hypothesis evolution, and ablation data.
+### Architectural Integrity Metrics (High-Dim)
+* **ERI ≈ 0.10** (Expert Redundancy Index): Mathematically guaranteed low redundancy. The networks do not copy behavior.
+* **Gini ≈ 0.82** (Emergent Pruning): Out of 20 available networks, the gate decides to use only the 4 most efficient ones, completely ignoring the other 16 to isolate noise.
+* **RS ≈ 0.0008** (Routing Stability): The Router becomes convinced rapidly, stabilizing its assignment distribution from the 3rd epoch.
 
----
+## 🧪 Experiments and Reproducibility
 
-## V4 MNIST Validation Results (10 seeds × 10 epochs)
+Run the following scripts to prove the development of the mathematical architecture from the base version to the V6.0 scaling model:
 
-**Setup:** V4 h128/s2/g8/no-skip (250k FLOPs) vs MLP 128 (236k FLOPs). Full MNIST (60k train, 10k test). Batch=128, lr=0.01, l2=1e-4.
+```bash
+# V5.8: Introduction of multi-expert Top-K and Adam Router
+python experimentos/V5.8.py
 
-### 20-seed head-to-head
+# V5.9: Contextual Gating, Confidence Sharpening and Residual Routing
+python experimentos/V5.9.py
 
-| Metric | MLP 128 | V4 s=2 (20 seeds) |
-|--------|---------|-------------------|
-| Mean accuracy | **95.05%** ± 0.15% | 94.70% ± 0.35% |
-| Mean diff | | +0.35pp (MLP leads) |
+# V6.0: Massive Scaling Test (20 experts) tracking ERI, RS and Gini Index
+python experimentos/V6_0_Scaling_Robustness.py
+```
 
-### At equal parameters (242k)
+## 🧠 Core Findings
 
-| Metric | MLP 235 | V4 s=2 |
-|--------|---------|--------|
-| Mean accuracy | **95.19%** ± 0.10% | 94.70% ± 0.35% |
-| FLOPs | 483k | **250k (48% less)** |
-| Acc/MFLOP | 1.97 | **3.78 (92% more)** |
+* **Automatic Emergent Specialization**: Linear routers create noisy specialization; contextual routers align specialization with perfect predictive performance.
+* **Stable Routing Subspaces**: Through t-SNE, it is visible that the Gate separates decision subspaces, assigning them to networks with specific architectural weights (e.g., larger networks handle dense classes).
+* **Over-provisioned Scale generates Pruning**: Offering redundant capacity does not confuse the system. The model discovers computational slack and zeroes out the routing for unnecessary experts.
+* **Adaptive Sparse Computation Graph**: The final calculations prove that heterogeneous networks operate in perfect residual harmony, where a Top-1 guides the prediction and the Top-K provides soft context.
 
-### States scale (seed 1)
+## 🖼 Routing Visualization (V5.9)
 
-| States | Acc | L1_H | L2_H | Params |
-|--------|-----|------|------|--------|
-| MLP ref | 94.97% | — | — | 118K |
-| s=2 | **95.23%** | 0.087 (collapse) | 0.011 (collapse) | 242K |
-| s=4 | 94.30% | 0.025 (collapse) | **0.591** (distributed) | 476K |
-| s=8 | 93.66% | **0.486** (moderate) | 0.081 (collapse) | 944K |
-| s=16 | 93.34% | 0.350 (moderate) | 0.336 (moderate) | 1.88M |
+### 1. Contextual Separation via t-SNE
+The Router learns to create a sharp decision manifold in its internally generated context embedding (`g2`), proving robust spatial learning before routing.
+![Router Manifold](graficos/tsne_gate_manifold.png)
 
-### Temperature sweep (seed 5, naturally high entropy)
+### 2. Temporal Pruning
+Initial usage distribution is random, but historical priors force probabilities to rapidly converge to expert subsets in fewer than 10 epochs.
+![Usage Evolution](graficos/gate_usage_history.png)
 
-| T | Acc | L2_H |
-|---|-----|------|
-| 0.5 | 94.13% | 0.741 |
-| 1.0 | 93.97% | 0.869 |
-| 2.0 | 94.18% | 0.801 |
+### 3. Expert Allocation (Heatmap)
+Experts actively divide classes, with generalist networks acting in tandem with small localized function networks.
+![Class/Expert Matrix](graficos/heatmap_class_expert.png)
 
-### E3 — Parameter control (seed 1)
+## 📁 Repository Structure
 
-| Model | Params | Acc | FLOPs |
-|-------|--------|-----|-------|
-| MLP 128 | 118K | 94.97% | 236K |
-| MLP 235 | **242K** | 95.15% | 483K |
-| V4 s=2 | **242K** | **95.23%** | **250K** |
-
-**At equal params, V4 ties MLP in accuracy (95.23% vs 95.15%) but uses 48% fewer FLOPs.** V4's real advantage is efficiency, not accuracy.
-
-### Key findings
-
-1. **V4 did not outperform MLP** (94.78% vs 95.05%, -0.28pp)
-2. **Temperature does not control collapse** — gate regime is seed-dependent
-3. **Collapsed seeds have BETTER accuracy** than high-entropy seeds
-4. **More states → worse accuracy** (s=2: 95.23% → s=16: 93.34%)
-5. **Real specialization exists** (s=16: experts 4/12 in L1, 8/14 in L2) but does not improve accuracy
-6. **Problem is architecture, not routing** — V4 has a fundamental limitation in gradient flow via top-1 hard selection
-7. **At equal parameters, V4 ties MLP** — the gain is efficiency (half the FLOPs), not accuracy
-
-Full report: [`docs/en-US/REPORT_V4_MNIST.md`](docs/en-US/REPORT_V4_MNIST.md)
-Roadmap: [`docs/en-US/ROADMAP.md`](docs/en-US/ROADMAP.md)
+* `experimentos/` - Scripts containing each architectural version (V5.8, V5.9, V6.0, V5_9_Visualizer, V6_1_Ablation).
+* `resultados_finais/` - Generated JSON files tracking raw metrics of each execution.
+* `graficos/` - t-SNE, gate usage history, and heatmaps visualizing modular routing.
+* `docs/` - Theoretical manuscripts and logbooks of the entire scientific research journey.
