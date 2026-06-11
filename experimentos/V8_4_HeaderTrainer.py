@@ -132,8 +132,8 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.CrossEntropyLoss(ignore_index=pad_idx)
     
-    epochs = 3
-    print("\nIniciando Treinamento Rápido (3 Épocas para mapear especialização)...")
+    epochs = 10
+    print("\nIniciando Treinamento Intenso (10 Épocas para decantação estatística)...")
     
     for epoch in range(epochs):
         model.train()
@@ -184,11 +184,47 @@ def main():
     tokens_to_plot = []
     matrix_to_plot = []
     
-    for token, prob_list in list(expert_usage_per_token.items())[:25]: # Pegar top 25 tokens diferentes para o gráfico
+    # Dicionários para contagem estatística sugerida
+    token_categories = {
+        "HTML_ESTRUTURAL": ["<header>", "</header>", "<h1>", "</h1>", "<nav>", "</nav>", "<span>", "</span>", "<button>", "</button>"],
+        "CSS_LAYOUT": ["width:", "box-sizing:", "display:", "justify-content:", "align-items:", "padding:", "margin:"],
+        "CSS_VISUAL": ["background-color:", "color:", "font-family:", "border-radius:", "border:", "cursor:", "font-weight:", "style="],
+        "CONTEUDO_TEXTO": ["Logo", "Brand", "MySite", "App", "Home", "About", "Services", "Contact", "Dashboard", "Login", "Sign", "Enter", "&nbsp;"]
+    }
+    
+    expert_category_dominance = {i: {cat: 0.0 for cat in token_categories.keys()} for i in range(5)}
+    
+    for token, prob_list in list(expert_usage_per_token.items()):
         avg_probs = sum(prob_list) / len(prob_list)
-        tokens_to_plot.append(token[:15]) # Truncar strings longas
-        matrix_to_plot.append(avg_probs)
         
+        # Atribui o token ao expert vencedor
+        winning_expert = int(torch.tensor(avg_probs).argmax().item())
+        
+        # Mapear para categoria
+        for cat, kw_list in token_categories.items():
+            if any(kw in token for kw in kw_list):
+                expert_category_dominance[winning_expert][cat] += 1
+                break
+                
+        if len(tokens_to_plot) < 25:
+            tokens_to_plot.append(token[:15])
+            matrix_to_plot.append(avg_probs)
+            
+    print("\n" + "="*50)
+    print("RELATÓRIO ESTATÍSTICO DE ESPECIALIZAÇÃO FUNCIONAL")
+    print("="*50)
+    for expert_id, cats in expert_category_dominance.items():
+        total_tokens_won = sum(cats.values())
+        if total_tokens_won > 0:
+            print(f"\n[Expert {expert_id}] Dominou {total_tokens_won} tokens únicos:")
+            for cat, count in cats.items():
+                if count > 0:
+                    pct = (count / total_tokens_won) * 100
+                    print(f"  -> {pct:.1f}% pertencem à categoria: {cat}")
+        else:
+            print(f"\n[Expert {expert_id}] Não dominou estatisticamente nenhuma categoria principal (Possível Colapso ou Memória Passiva).")
+    print("="*50)
+    
     import numpy as np
     matrix_to_plot = np.array(matrix_to_plot)
     
@@ -205,7 +241,6 @@ def main():
     plt.close()
     
     print("\n[Artefato Crítico Gerado] Heatmap salvo em: graficos/expert_heatmap_v8.png")
-    print("A hipótese da separação funcional estrutural vs semântica já pode ser visualizada!")
 
 if __name__ == "__main__":
     main()
