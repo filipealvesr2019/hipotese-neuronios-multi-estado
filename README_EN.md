@@ -66,6 +66,13 @@ A rigorous gradient freezing study (V6.2) was conducted to isolate where the int
 2. **Router First (Frozen Experts)**: The Router maps inputs to statically randomized experts, creating a strong geometrical boundary from epoch 1 (Gini 0.47).
 3. **Core Discovery**: *Specialization does not emanate from the experts. The experts are merely computational clay. Specialization is an active constraint imposed entirely by the Router dividing the manifold. The router defines the learning geometry.*
 
+## ⚖️ The Law of Router Capacity (Capacity Study)
+
+An isolated experiment (`V6.4`) fixed the massive expert capacity and scaled only the Router's "brain" (from 8 to 256 hidden neurons):
+* **Weak Router (Hidden=8)**: Accuracy drops to 25% and Gini falls to 0.36. The router is blind to the input topology, turning the entire system into redundant noise.
+* **Massive Router (Hidden=256)**: Accuracy surges to 38% and Gini reaches 0.70. The router does not overfit its routing choices; it assumes absolute control over the geometry.
+* **Causal Conclusion**: The adaptive intelligence of the MoE fluctuates purely and exclusively based on the parametric capacity of the Router. Experts are passive modules that depend entirely on correct spatial partitioning.
+
 ## 📁 Repository Structure
 
 * `experimentos/` - Scripts containing each architectural version (V5.8, V5.9, V6.0, V5_9_Visualizer, V6_1_Ablation).

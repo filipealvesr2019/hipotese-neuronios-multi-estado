@@ -66,6 +66,13 @@ Um estudo rigoroso de "Freeze" (congelamento de gradientes) foi conduzido na ver
 2. **Router Primeiro (Experts Congelados)**: O Roteador roteia para experts estáticos aleatórios, criando uma geometria divisória forte desde o primeiro momento (Gini 0.47).
 3. **Descoberta Final**: *A especialização não emana dos experts. Os experts são apenas argila computacional. A especialização é uma restrição imposta ativamente pelo Roteador dividindo a manifold. O roteador define a geometria do aprendizado.*
 
+## ⚖️ A Lei da Capacidade do Router (Capacity Study)
+
+Um experimento isolado (`V6.4`) fixou a capacidade massiva dos experts e escalou apenas o "cérebro" do Roteador (de 8 a 256 neurônios ocultos):
+* **Router Burro (Hidden=8)**: Acurácia despenca para 25% e Gini cai para 0.36. O roteador é cego à topologia, transformando todo o sistema em ruído redundante.
+* **Router Gigante (Hidden=256)**: Acurácia dispara para 38% e Gini alcança 0.70. O roteador não sofre overfitting de roteamento; ele assume o controle absoluto da geometria.
+* **Conclusão Causal**: A inteligência adaptativa do MoE flutua única e exclusivamente com base na capacidade paramétrica do Roteador. Os experts são módulos passivos que dependem inteiramente da partição espacial correta.
+
 ## 📁 Estrutura do Projeto
 
 * `experimentos/` - Scripts contendo cada versão arquitetural (V5.8, V5.9, V6.0, V5_9_Visualizer, V6_1_Ablation).
