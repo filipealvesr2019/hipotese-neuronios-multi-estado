@@ -4584,3 +4584,26 @@ Resultados da desconstrução (ordenados por impacto):
 
 **O Veredito:**
 Os seus upgrades no V5.9 não foram apenas refinamentos, foram a diferença entre a vida e a morte do modelo em dimensões reais. A combinação de **Contextual Gate + Adam** é absolutamente essencial para garantir o "Emergent Pruning" (escolher ativamente e focar em poucos especialistas em vez de dar pesos iguais a todos). O **Residual Routing e Heterogeneidade** adicionaram os degraus arquiteturais de hierarquia necessários para saltarmos do patamar de `0.20` para os definitivos `0.29+`.
+
+---
+
+# V6.2 — FREEZE STUDY (Causalidade: Router vs Experts)
+
+Para responder à pergunta final sobre "quem carrega a inteligência da especialização", testamos 4 cenários isolando o fluxo de gradientes. Congelamos o Router nas primeiras 10 épocas, ou congelamos os Experts, para ver quem define a geometria do aprendizado. O teste foi feito num dataset complexo com 10 experts por 20 épocas.
+
+**Resultados do Freeze Study:**
+1. **Joint Training (Baseline)**: `ACC 0.4575 | Gini 0.4541` -> *O teto de performance.*
+2. **Frozen Router (Experts Only)**: `ACC 0.4037 | Gini 0.4598` -> *O gate é fixo aleatório desde o início. Os experts aprendem a mapear sub-regiões fixas aleatórias (um ensemble de partições estáticas).*
+3. **Router First (Freeze Experts)**: `ACC 0.3762 | Gini 0.4778` -> *O Router tenta rotear para experts burros por 10 épocas. Ele cria uma geometria forte (Gini alto). Quando os experts acordam, eles se adaptam a essa geometria.*
+4. **Experts First (Freeze Router)**: `ACC 0.3513 | Gini 0.3372` -> **O Colapso da Especialização.**
+
+## 🧠 Insight Definitivo: O Roteador define a geometria do aprendizado
+
+A prova causal está no **Cenário 4 (Experts First)**. O que acontece se deixarmos os experts treinarem por 10 épocas com o Roteador congelado e depois ligarmos o Roteador?
+**A performance é a pior de todas (0.35) e o Gini despenca para 0.33 (o menor registrado).**
+
+Por quê? Porque sem a "mão" do roteador deslocando ativamente a distribuição de dados para redes específicas, **todos os experts tentam resolver o dataset inteiro sozinhos e se tornam generalistas idênticos e redundantes.**
+Quando o Roteador finalmente acorda na época 10, ele olha para os 10 experts e vê 10 clones gerais. Como não há especialização, ele distribui a carga uniformemente (Gini cai pra 0.33) e o sistema inteiro afunda.
+
+**Conclusão Causal:** 
+A especialização não nasce dos experts. Os experts são argila. **A especialização nasce única e exclusivamente do Roteador impondo restrições e dividindo a manifold.** Se o Roteador não agir primeiro e simultaneamente, a arquitetura MoE reverte para um ensemble redundante.

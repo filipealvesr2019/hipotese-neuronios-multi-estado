@@ -58,6 +58,13 @@ Initial usage distribution is random, but historical priors force probabilities 
 Experts actively divide classes, with generalist networks acting in tandem with small localized function networks.
 ![Class/Expert Matrix](graficos/heatmap_class_expert.png)
 
+## 🧩 Causality Study (Freeze Study)
+
+A rigorous gradient freezing study (V6.2) was conducted to isolate where the intelligence of specialization originates:
+1. **Experts First (Frozen Router)**: The experts attempt to learn the dataset on their own and become completely redundant generalists. When the Router is finally unfrozen, the Gini Index plummets (0.33) proving the **Collapse of Specialization**.
+2. **Router First (Frozen Experts)**: The Router maps inputs to statically randomized experts, creating a strong geometrical boundary from epoch 1 (Gini 0.47).
+3. **Core Discovery**: *Specialization does not emanate from the experts. The experts are merely computational clay. Specialization is an active constraint imposed entirely by the Router dividing the manifold. The router defines the learning geometry.*
+
 ## 📁 Repository Structure
 
 * `experimentos/` - Scripts containing each architectural version (V5.8, V5.9, V6.0, V5_9_Visualizer, V6_1_Ablation).

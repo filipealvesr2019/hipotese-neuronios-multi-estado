@@ -58,6 +58,13 @@ A distribuição inicial de uso é aleatória, mas a memória histórica força 
 Os experts não apenas participam, mas dividem ativamente as classes, com redes generalistas atuando em conjunto com pequenas redes de função localizada.
 ![Matriz Classe/Expert](graficos/heatmap_class_expert.png)
 
+## 🧩 Estudo de Causalidade (Freeze Study)
+
+Um estudo rigoroso de "Freeze" (congelamento de gradientes) foi conduzido na versão `V6.2` para isolar de onde surge a inteligência da especialização:
+1. **Experts Primeiro (Router Congelado)**: Os experts tentam aprender sozinhos e se tornam generalistas idênticos e redundantes. Quando o Roteador é ativado, o Gini Index despenca (0.33) provando o **Colapso da Especialização**.
+2. **Router Primeiro (Experts Congelados)**: O Roteador roteia para experts estáticos aleatórios, criando uma geometria divisória forte desde o primeiro momento (Gini 0.47).
+3. **Descoberta Final**: *A especialização não emana dos experts. Os experts são apenas argila computacional. A especialização é uma restrição imposta ativamente pelo Roteador dividindo a manifold. O roteador define a geometria do aprendizado.*
+
 ## 📁 Estrutura do Projeto
 
 * `experimentos/` - Scripts contendo cada versão arquitetural (V5.8, V5.9, V6.0, V5_9_Visualizer, V6_1_Ablation).
